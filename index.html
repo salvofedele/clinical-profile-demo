@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Profilo Clinico Integrato — Demo Paziente 181257-F</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap');
+
+  :root {
+    --bg: #F7F5F0;
+    --bg-card: #FFFFFF;
+    --text-primary: #1A1A1A;
+    --text-secondary: #5A5A5A;
+    --text-muted: #8A8A8A;
+    --border: #E0DCD4;
+    --border-light: #EDE9E2;
+    --accent: #B8860B;
+    --accent-light: #F5ECD7;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'IBM Plex Sans', sans-serif;
+    background: var(--bg); color: var(--text-primary);
+    line-height: 1.6; -webkit-font-smoothing: antialiased;
+    min-height: 100vh;
+  }
+
+  .hero {
+    background: linear-gradient(180deg, #FFFFFF 0%, var(--bg) 100%);
+    border-bottom: 1px solid var(--border);
+    padding: 3.5rem 2rem 2.5rem; text-align: center;
+  }
+  .hero-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.62rem; letter-spacing: 0.25em; text-transform: uppercase;
+    color: var(--accent); margin-bottom: 0.6rem;
+  }
+  .hero h1 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 2.2rem; font-weight: 400; margin-bottom: 0.4rem;
+    max-width: 650px; margin-left: auto; margin-right: auto;
+  }
+  .hero .sub {
+    font-size: 0.88rem; color: var(--text-secondary); font-weight: 300;
+    max-width: 550px; margin: 0 auto;
+  }
+  .hero .meta {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.65rem; color: var(--text-muted); margin-top: 1rem;
+  }
+
+  .privacy-bar {
+    max-width: 650px; margin: 1.2rem auto 0;
+    padding: 0.65rem 1rem; background: #FFF8E1; border: 1px solid #F0E0A0;
+    border-radius: 6px; font-size: 0.72rem; color: #7A6520; text-align: left;
+  }
+
+  /* Patient strip */
+  .strip {
+    display: flex; justify-content: center; flex-wrap: wrap; gap: 2rem;
+    padding: 1.5rem; max-width: 700px; margin: 0 auto;
+  }
+  .strip-item { text-align: center; }
+  .strip-val {
+    font-family: 'DM Serif Display', serif; font-size: 1.5rem; color: var(--accent);
+  }
+  .strip-label {
+    font-size: 0.58rem; text-transform: uppercase; letter-spacing: 0.12em;
+    color: var(--text-muted); font-weight: 500;
+  }
+
+  /* Cards grid */
+  .cards {
+    max-width: 750px; margin: 0 auto; padding: 0 1.5rem 2rem;
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1rem;
+  }
+  .card {
+    background: var(--bg-card); border: 1px solid var(--border-light);
+    border-radius: 10px; padding: 1.4rem 1.3rem;
+    text-decoration: none; color: inherit;
+    border-left: 4px solid var(--accent);
+    transition: all 0.25s ease;
+    display: flex; flex-direction: column;
+  }
+  .card:hover {
+    box-shadow: 0 4px 20px rgba(0,0,0,0.07);
+    transform: translateY(-2px);
+  }
+  .card-icon { font-size: 1.6rem; margin-bottom: 0.5rem; }
+  .card-title {
+    font-weight: 700; font-size: 0.95rem; margin-bottom: 0.25rem;
+  }
+  .card-desc {
+    font-size: 0.78rem; color: var(--text-secondary); font-weight: 300;
+    line-height: 1.5; flex: 1;
+  }
+  .card-tag {
+    margin-top: 0.7rem;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.6rem; color: var(--text-muted);
+    letter-spacing: 0.05em;
+  }
+
+  .card.primary { border-left-color: var(--accent); }
+  .card.audio { border-left-color: #1565C0; }
+  .card.video { border-left-color: #C62828; }
+  .card.learn { border-left-color: #2D7D46; }
+  .card.timeline { border-left-color: #6A1B9A; }
+
+  /* About section */
+  .about {
+    max-width: 650px; margin: 1rem auto 0; padding: 2rem 1.5rem;
+    border-top: 1px solid var(--border);
+  }
+  .about-title {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.62rem; letter-spacing: 0.15em; text-transform: uppercase;
+    color: var(--text-muted); margin-bottom: 0.8rem;
+  }
+  .about p {
+    font-size: 0.8rem; color: var(--text-secondary); line-height: 1.65;
+    margin-bottom: 0.6rem;
+  }
+  .about a { color: var(--accent); }
+
+  .tools {
+    max-width: 650px; margin: 0 auto; padding: 0 1.5rem 2rem;
+  }
+  .tools-title {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.62rem; letter-spacing: 0.15em; text-transform: uppercase;
+    color: var(--text-muted); margin-bottom: 0.6rem;
+  }
+  .tool-badges {
+    display: flex; flex-wrap: wrap; gap: 0.4rem;
+  }
+  .tool-badge {
+    font-size: 0.68rem; font-weight: 500;
+    padding: 0.25rem 0.7rem; border-radius: 14px;
+    background: var(--bg-card); border: 1px solid var(--border);
+    color: var(--text-secondary);
+  }
+
+  .footer {
+    text-align: center; padding: 2rem; font-size: 0.62rem;
+    color: var(--text-muted); border-top: 1px solid var(--border-light);
+  }
+  .footer a { color: var(--accent); text-decoration: none; }
+
+  @media (max-width: 600px) {
+    .hero h1 { font-size: 1.6rem; }
+    .cards { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero-label">Demo — Portale paziente educativo</div>
+  <h1>Profilo Clinico Integrato</h1>
+  <div class="sub">Un caso clinico reale, anonimizzato e trasformato in un portale interattivo per la comprensione del percorso diagnostico-terapeutico.</div>
+  <div class="meta">Paziente 181257-F — Donna, 68 anni — Ultimo aggiornamento: marzo 2026</div>
+  <div class="privacy-bar">
+    ⚕️ Documento anonimizzato e pubblicato con il consenso della paziente a scopo divulgativo ed educativo. Non contiene dati identificativi diretti.
+  </div>
+</div>
+
+<div class="strip">
+  <div class="strip-item"><div class="strip-val">5</div><div class="strip-label">Risorse</div></div>
+  <div class="strip-item"><div class="strip-val">13</div><div class="strip-label">Problemi clinici</div></div>
+  <div class="strip-item"><div class="strip-val">54</div><div class="strip-label">Flashcard</div></div>
+  <div class="strip-item"><div class="strip-val">28</div><div class="strip-label">Anni di storia</div></div>
+</div>
+
+<div class="cards">
+
+  <a href="portale-clinico-integrato.html" class="card primary">
+    <div class="card-icon">◉</div>
+    <div class="card-title">Portale Clinico</div>
+    <div class="card-desc">Dashboard operativa con matrice di triage, status card per apparato, cronoprogramma interattivo, schede esplicative e cruscotto biomarcatori.</div>
+    <div class="card-tag">4 TAB · DASHBOARD · TIMELINE · CRONOPROGRAMMA · SCHEDE</div>
+  </a>
+
+  <a href="flashcard-cliniche.html" class="card learn">
+    <div class="card-icon">🗂</div>
+    <div class="card-title">Flashcard Cliniche</div>
+    <div class="card-desc">54 domande e risposte per comprendere ogni aspetto della relazione clinica. Modalità studio con flip animato e sistema di autovalutazione.</div>
+    <div class="card-tag">54 DOMANDE · 7 CATEGORIE · FLIP · AUTOVALUTAZIONE</div>
+  </a>
+
+  <a href="podcast-annotato.html" class="card audio">
+    <div class="card-icon">🎙</div>
+    <div class="card-title">Podcast Annotato</div>
+    <div class="card-desc">15 minuti di deep dive a due voci sul caso clinico. Transcript sincronizzato con 12 errori segnalati e 3 note editoriali.</div>
+    <div class="card-tag">15:42 · DUE VOCI · 12 CORREZIONI · TRANSCRIPT SYNC</div>
+  </a>
+
+  <a href="video-guida.html" class="card video">
+    <div class="card-icon">🎬</div>
+    <div class="card-title">Video Guida Narrata</div>
+    <div class="card-desc">Guida narrata di 7 minuti che trasforma la relazione clinica in un percorso comprensibile. Transcript con 6 correzioni essenziali.</div>
+    <div class="card-tag">7:07 · VOCE SINGOLA · 6 CORREZIONI · DIDATTICO</div>
+  </a>
+
+  <a href="timeline-clinica-interattiva.html" class="card timeline">
+    <div class="card-icon">◷</div>
+    <div class="card-title">Timeline Clinica</div>
+    <div class="card-desc">Versione standalone della storia clinica 1998–2026, con 35 eventi filtrabili per categoria e dettagli espandibili.</div>
+    <div class="card-tag">35 EVENTI · 9 CATEGORIE · FILTRI · ESPANDIBILE</div>
+  </a>
+
+</div>
+
+<div class="about">
+  <div class="about-title">Il progetto</div>
+  <p>Questo portale nasce da un caso clinico reale: una donna di 68 anni con un profilo multi-morbido ma ben compensato, fisioterapista in pensione, canottiera, con uno stile di vita esemplare che si confronta con una genetica sfavorevole.</p>
+  <p>L'obiettivo è dimostrare come gli strumenti digitali possano trasformare una relazione clinica densa e tecnica in un percorso comprensibile per il paziente e la sua famiglia — senza perdere rigore, ma guadagnando chiarezza.</p>
+  <p>I contenuti multimediali (podcast e video) sono stati generati con <strong>NotebookLM</strong> (Google) a partire dalla relazione clinica, poi sottoposti a <strong>revisione editoriale</strong> con Claude (Anthropic) per correggere errori terminologici, imprecisioni cliniche e incongruenze.</p>
+</div>
+
+<div class="tools">
+  <div class="tools-title">Strumenti utilizzati</div>
+  <div class="tool-badges">
+    <span class="tool-badge">NotebookLM (Google)</span>
+    <span class="tool-badge">Claude Opus 4.6 (Anthropic)</span>
+    <span class="tool-badge">GitHub Pages</span>
+    <span class="tool-badge">VS Code</span>
+    <span class="tool-badge">HTML/CSS/JS</span>
+  </div>
+</div>
+
+<footer class="footer">
+  Progetto a cura di <a href="https://github.com/salvofedele">Salvo Fedele</a> — Marzo 2026<br>
+  Dati clinici anonimizzati · Pubblicato con consenso · Finalità educativa e divulgativa
+</footer>
+
+</body>
+</html>

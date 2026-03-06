@@ -1,0 +1,21 @@
+{
+  "recommendations": [
+    // Live Server - anteprima HTML nel browser con auto-refresh
+    "ritwickdey.liveserver",
+
+    // Italian spell checker
+    "streetsidesoftware.code-spell-checker-italian",
+
+    // JSON viewer/formatter - evidenzia errori di sintassi nel JSON
+    "zainchen.json",
+
+    // Prettier - formattazione automatica HTML/CSS/JS
+    "esbenp.prettier-vscode",
+
+    // HTML CSS Support - autocompletamento classi CSS nell'HTML
+    "ecmel.vscode-html-css",
+
+    // Markdown Preview Enhanced - anteprima README e CHANGELOG
+    "shd101wyy.markdown-preview-enhanced"
+  ]
+}

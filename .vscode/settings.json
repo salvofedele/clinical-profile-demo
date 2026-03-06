@@ -1,0 +1,37 @@
+{
+  // Lingua del correttore ortografico
+  "cSpell.language": "it,en",
+  
+  // File da nascondere nella barra laterale (non servono per l'editing)
+  "files.exclude": {
+    "**/.git": true,
+    "**/.DS_Store": true,
+    "**/Thumbs.db": true
+  },
+
+  // Formattazione automatica al salvataggio
+  "editor.formatOnSave": true,
+
+  // Dimensione tab per HTML/CSS/JS
+  "editor.tabSize": 2,
+  "[html]": { "editor.defaultFormatter": "vscode.html-language-features" },
+  "[json]": { "editor.defaultFormatter": "vscode.json-language-features" },
+
+  // Word wrap attivo (comodo per testi lunghi nei transcript)
+  "editor.wordWrap": "on",
+
+  // Evidenziazione parentesi e bracket matching
+  "editor.bracketPairColorization.enabled": true,
+
+  // Live Server: apri nel browser predefinito
+  "liveServer.settings.donotShowInfoMsg": true,
+
+  // Emmet per HTML (autocompletamento tag)
+  "emmet.includeLanguages": { "html": "html" },
+
+  // File associations
+  "files.associations": {
+    "*.json": "json",
+    "CHANGELOG.md": "markdown"
+  }
+}

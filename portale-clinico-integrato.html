@@ -1,0 +1,1283 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Portale Clinico — Profilo Paziente 181257-F</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap');
+
+  :root {
+    --bg: #F7F5F0;
+    --bg-card: #FFFFFF;
+    --bg-card-hover: #FAFAF7;
+    --text-primary: #1A1A1A;
+    --text-secondary: #5A5A5A;
+    --text-muted: #8A8A8A;
+    --border: #E0DCD4;
+    --border-light: #EDE9E2;
+    --line: #C8C2B6;
+    --accent: #B8860B;
+    --accent-light: #F5ECD7;
+
+    --pri1: #C0392B; --pri1-bg: #FDEDEC;
+    --pri2: #2874A6; --pri2-bg: #EBF5FB;
+    --pri3: #D4AC0D; --pri3-bg: #FEF9E7;
+    --pri4: #27AE60; --pri4-bg: #EAFAF1;
+
+    --cat-gastro: #2D7D46; --cat-gastro-bg: #E8F5E9;
+    --cat-hepato: #8B6914; --cat-hepato-bg: #FFF8E1;
+    --cat-onco: #C62828; --cat-onco-bg: #FFEBEE;
+    --cat-cardio: #1565C0; --cat-cardio-bg: #E3F2FD;
+    --cat-endo: #6A1B9A; --cat-endo-bg: #F3E5F5;
+    --cat-chir: #37474F; --cat-chir-bg: #ECEFF1;
+    --cat-msk: #E65100; --cat-msk-bg: #FFF3E0;
+    --cat-lab: #00695C; --cat-lab-bg: #E0F2F1;
+    --cat-screen: #4E342E; --cat-screen-bg: #EFEBE9;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'IBM Plex Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text-primary);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ===================== HEADER ===================== */
+  .site-header {
+    background: linear-gradient(180deg, #FFFFFF 0%, var(--bg) 100%);
+    border-bottom: 1px solid var(--border);
+    padding: 2rem 2rem 0;
+    text-align: center;
+  }
+  .site-header .label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.65rem; letter-spacing: 0.2em; text-transform: uppercase;
+    color: var(--accent);
+  }
+  .site-header h1 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.8rem; font-weight: 400; margin: 0.3rem 0 0.15rem;
+  }
+  .site-header .sub {
+    font-size: 0.82rem; color: var(--text-secondary); font-weight: 300;
+  }
+  .site-header .meta {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.65rem; color: var(--text-muted); margin-top: 0.6rem;
+  }
+  .privacy-bar {
+    max-width: 680px; margin: 1rem auto 0;
+    padding: 0.6rem 1rem; background: #FFF8E1; border: 1px solid #F0E0A0;
+    border-radius: 6px; font-size: 0.72rem; color: #7A6520; text-align: left;
+  }
+
+  /* Patient summary strip */
+  .patient-strip {
+    display: flex; justify-content: center; flex-wrap: wrap; gap: 1.5rem;
+    padding: 1rem 1.5rem; max-width: 800px; margin: 0 auto;
+  }
+  .ps-item { text-align: center; }
+  .ps-value {
+    font-family: 'DM Serif Display', serif; font-size: 1.4rem; color: var(--accent);
+  }
+  .ps-label {
+    font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.12em;
+    color: var(--text-muted); font-weight: 500;
+  }
+
+  /* ===================== NAV TABS ===================== */
+  .tab-nav {
+    display: flex; justify-content: center; gap: 0;
+    background: rgba(247,245,240,0.95);
+    backdrop-filter: blur(10px);
+    border-bottom: 2px solid var(--border);
+    position: sticky; top: 0; z-index: 200;
+  }
+  .tab-btn {
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 0.78rem; font-weight: 500;
+    padding: 0.85rem 1.4rem;
+    border: none; background: none;
+    color: var(--text-muted); cursor: pointer;
+    border-bottom: 2.5px solid transparent;
+    transition: all 0.25s ease;
+    white-space: nowrap;
+  }
+  .tab-btn:hover { color: var(--text-secondary); }
+  .tab-btn.active {
+    color: var(--accent); border-bottom-color: var(--accent);
+  }
+  .tab-btn .tab-icon { margin-right: 0.4rem; }
+
+  /* ===================== TAB PANELS ===================== */
+  .tab-panel { display: none; animation: fadeIn 0.35s ease; }
+  .tab-panel.active { display: block; }
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+  .panel-inner { max-width: 900px; margin: 0 auto; padding: 2rem 1.5rem 4rem; }
+  .section-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.35rem; margin-bottom: 0.3rem;
+  }
+  .section-sub {
+    font-size: 0.8rem; color: var(--text-secondary); font-weight: 300;
+    margin-bottom: 1.5rem;
+  }
+
+  /* ===================== DASHBOARD ===================== */
+  /* Triage matrix */
+  .triage-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem; margin-bottom: 2.5rem;
+  }
+  .triage-col {
+    border-radius: 10px; padding: 1rem; border-top: 4px solid;
+  }
+  .triage-col[data-pri="1"] { background: var(--pri1-bg); border-top-color: var(--pri1); }
+  .triage-col[data-pri="2"] { background: var(--pri2-bg); border-top-color: var(--pri2); }
+  .triage-col[data-pri="3"] { background: var(--pri3-bg); border-top-color: var(--pri3); }
+  .triage-col[data-pri="4"] { background: var(--pri4-bg); border-top-color: var(--pri4); }
+  .triage-header {
+    font-weight: 700; font-size: 0.72rem; text-transform: uppercase;
+    letter-spacing: 0.08em; margin-bottom: 0.6rem;
+  }
+  .triage-col[data-pri="1"] .triage-header { color: var(--pri1); }
+  .triage-col[data-pri="2"] .triage-header { color: var(--pri2); }
+  .triage-col[data-pri="3"] .triage-header { color: var(--pri3); }
+  .triage-col[data-pri="4"] .triage-header { color: var(--pri4); }
+  .triage-item {
+    font-size: 0.76rem; color: var(--text-primary); padding: 0.35rem 0;
+    border-bottom: 1px solid rgba(0,0,0,0.06); line-height: 1.45;
+  }
+  .triage-item:last-child { border-bottom: none; }
+
+  /* Status cards */
+  .status-section { margin-bottom: 2rem; }
+  .status-section-title {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.65rem; letter-spacing: 0.15em; text-transform: uppercase;
+    color: var(--text-muted); margin-bottom: 0.75rem;
+    padding-bottom: 0.4rem; border-bottom: 1px solid var(--border-light);
+  }
+  .status-grid {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 0.8rem;
+  }
+  .status-card {
+    background: var(--bg-card); border: 1px solid var(--border-light);
+    border-radius: 8px; padding: 1rem; border-left: 3.5px solid;
+    transition: box-shadow 0.2s;
+  }
+  .status-card:hover { box-shadow: 0 2px 12px rgba(0,0,0,0.06); }
+  .sc-head { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.4rem; }
+  .sc-title { font-weight: 600; font-size: 0.82rem; }
+  .sc-badge {
+    font-size: 0.6rem; font-weight: 600; padding: 0.15rem 0.55rem;
+    border-radius: 10px; white-space: nowrap; flex-shrink: 0;
+  }
+  .badge-stable { background: #E8F5E9; color: #2D7D46; }
+  .badge-watch { background: #FFF8E1; color: #B8860B; }
+  .badge-action { background: #FFEBEE; color: #C62828; }
+  .badge-resolved { background: #ECEFF1; color: #546E7A; }
+  .sc-body { font-size: 0.75rem; color: var(--text-secondary); line-height: 1.55; }
+  .sc-action {
+    margin-top: 0.5rem; padding-top: 0.4rem; border-top: 1px dashed var(--border-light);
+    font-size: 0.72rem; color: var(--text-primary); font-weight: 500;
+  }
+
+  /* Therapy table */
+  .therapy-table {
+    width: 100%; border-collapse: collapse; margin-top: 0.5rem;
+  }
+  .therapy-table th {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.62rem; letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--text-muted); text-align: left; padding: 0.5rem 0.6rem;
+    border-bottom: 2px solid var(--border);
+  }
+  .therapy-table td {
+    font-size: 0.78rem; padding: 0.55rem 0.6rem;
+    border-bottom: 1px solid var(--border-light);
+    vertical-align: top;
+  }
+  .therapy-table tr:hover td { background: var(--bg-card-hover); }
+  .pill-dot {
+    display: inline-block; width: 8px; height: 8px; border-radius: 50%;
+    margin-right: 0.4rem; vertical-align: middle;
+  }
+
+  /* Biomarker dashboard */
+  .bio-grid {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+    gap: 0.7rem; margin-top: 0.5rem;
+  }
+  .bio-card {
+    background: var(--bg-card); border: 1px solid var(--border-light);
+    border-radius: 8px; padding: 0.8rem; text-align: center;
+  }
+  .bio-value { font-family: 'DM Serif Display', serif; font-size: 1.3rem; }
+  .bio-value.ok { color: var(--cat-gastro); }
+  .bio-value.warn { color: var(--accent); }
+  .bio-value.alert { color: var(--cat-onco); }
+  .bio-label { font-size: 0.68rem; color: var(--text-muted); margin-top: 0.1rem; }
+  .bio-ref { font-family: 'IBM Plex Mono', monospace; font-size: 0.6rem; color: var(--text-muted); }
+  .bio-status {
+    font-size: 0.6rem; font-weight: 600; margin-top: 0.3rem;
+    padding: 0.12rem 0.5rem; border-radius: 8px; display: inline-block;
+  }
+
+  /* ===================== CRONOPROGRAMMA ===================== */
+  .chrono-track { position: relative; padding-left: 2rem; }
+  .chrono-line {
+    position: absolute; left: 10px; top: 0; bottom: 0;
+    width: 2px; background: var(--line);
+  }
+  .chrono-window {
+    position: relative; margin-bottom: 2rem;
+  }
+  .chrono-dot {
+    position: absolute; left: -26px; top: 0.3rem;
+    width: 14px; height: 14px; border-radius: 50%; border: 3px solid;
+    background: var(--bg); z-index: 2;
+  }
+  .chrono-window[data-urgency="high"] .chrono-dot { border-color: var(--pri1); }
+  .chrono-window[data-urgency="med"] .chrono-dot { border-color: var(--pri2); }
+  .chrono-window[data-urgency="low"] .chrono-dot { border-color: var(--pri3); }
+  .chrono-window[data-urgency="routine"] .chrono-dot { border-color: var(--cat-gastro); }
+
+  .chrono-period {
+    font-family: 'DM Serif Display', serif; font-size: 1.1rem;
+    margin-bottom: 0.6rem; color: var(--text-primary);
+  }
+  .chrono-items { display: flex; flex-direction: column; gap: 0.5rem; }
+  .chrono-card {
+    background: var(--bg-card); border: 1px solid var(--border-light);
+    border-radius: 8px; padding: 0.7rem 0.9rem;
+    display: flex; align-items: flex-start; gap: 0.6rem;
+    cursor: pointer; transition: all 0.2s;
+  }
+  .chrono-card:hover { box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+  .chrono-check {
+    width: 18px; height: 18px; border-radius: 4px; border: 2px solid var(--line);
+    flex-shrink: 0; margin-top: 1px; display: flex; align-items: center;
+    justify-content: center; transition: all 0.2s; cursor: pointer;
+  }
+  .chrono-check.checked {
+    background: var(--cat-gastro); border-color: var(--cat-gastro);
+  }
+  .chrono-check.checked::after {
+    content: '✓'; color: #fff; font-size: 0.7rem; font-weight: 700;
+  }
+  .chrono-card.done { opacity: 0.5; }
+  .chrono-card.done .cc-title { text-decoration: line-through; }
+  .cc-content { flex: 1; }
+  .cc-title { font-weight: 600; font-size: 0.8rem; }
+  .cc-detail { font-size: 0.73rem; color: var(--text-secondary); margin-top: 0.15rem; }
+  .cc-tag {
+    display: inline-block; font-size: 0.58rem; font-weight: 600;
+    padding: 0.1rem 0.45rem; border-radius: 8px; margin-top: 0.3rem;
+  }
+
+  /* ===================== SCHEDE PATOLOGIA ===================== */
+  .scheda {
+    background: var(--bg-card); border: 1px solid var(--border-light);
+    border-radius: 10px; margin-bottom: 1rem; overflow: hidden;
+    transition: box-shadow 0.2s;
+  }
+  .scheda:hover { box-shadow: 0 2px 12px rgba(0,0,0,0.05); }
+  .scheda-header {
+    padding: 1rem 1.2rem; cursor: pointer; display: flex;
+    justify-content: space-between; align-items: center;
+    border-left: 4px solid;
+  }
+  .scheda-left { display: flex; align-items: center; gap: 0.8rem; }
+  .scheda-icon {
+    font-size: 1.4rem; width: 38px; height: 38px; border-radius: 10px;
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  }
+  .scheda-name { font-weight: 600; font-size: 0.9rem; }
+  .scheda-status { font-size: 0.72rem; color: var(--text-secondary); }
+  .scheda-arrow {
+    font-size: 0.8rem; color: var(--text-muted);
+    transition: transform 0.3s; flex-shrink: 0;
+  }
+  .scheda.open .scheda-arrow { transform: rotate(180deg); }
+  .scheda-body {
+    max-height: 0; overflow: hidden; transition: max-height 0.45s ease;
+  }
+  .scheda.open .scheda-body { max-height: 2000px; }
+  .scheda-content {
+    padding: 0 1.2rem 1.2rem 1.2rem;
+    border-top: 1px solid var(--border-light);
+  }
+  .scheda-block {
+    margin-top: 0.8rem;
+  }
+  .scheda-block-title {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.62rem; letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--text-muted); margin-bottom: 0.3rem;
+  }
+  .scheda-block p, .scheda-block ul {
+    font-size: 0.78rem; color: var(--text-secondary); line-height: 1.6;
+  }
+  .scheda-block ul { padding-left: 1.2rem; }
+  .scheda-block li { margin-bottom: 0.2rem; }
+  .scheda-highlight {
+    background: #FFF8E1; border: 1px solid #F0E0A0; border-radius: 6px;
+    padding: 0.6rem 0.8rem; font-size: 0.75rem; color: #7A6520;
+    margin-top: 0.6rem;
+  }
+
+  /* ===================== TIMELINE (embedded) ===================== */
+  .tl-filter-bar {
+    display: flex; flex-wrap: wrap; gap: 0.4rem;
+    justify-content: center; margin-bottom: 1.5rem;
+    padding: 0.5rem 0;
+    position: sticky; top: 48px; z-index: 100;
+    background: rgba(247,245,240,0.92); backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--border-light);
+    margin: 0 -1.5rem 1.5rem; padding: 0.6rem 1.5rem;
+  }
+  .tl-btn {
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 0.68rem; font-weight: 500;
+    padding: 0.25rem 0.6rem; border-radius: 16px;
+    border: 1.5px solid var(--border); background: var(--bg-card);
+    color: var(--text-secondary); cursor: pointer; transition: all 0.2s;
+  }
+  .tl-btn:hover { border-color: var(--text-muted); }
+  .tl-btn.active { color: #fff; border-color: transparent; }
+  .tl-btn[data-cat="all"].active { background: var(--text-primary); }
+  .tl-btn[data-cat="gastro"].active { background: var(--cat-gastro); }
+  .tl-btn[data-cat="hepato"].active { background: var(--cat-hepato); }
+  .tl-btn[data-cat="onco"].active { background: var(--cat-onco); }
+  .tl-btn[data-cat="cardio"].active { background: var(--cat-cardio); }
+  .tl-btn[data-cat="endo"].active { background: var(--cat-endo); }
+  .tl-btn[data-cat="chir"].active { background: var(--cat-chir); }
+  .tl-btn[data-cat="msk"].active { background: var(--cat-msk); }
+  .tl-btn[data-cat="lab"].active { background: var(--cat-lab); }
+  .tl-btn[data-cat="screen"].active { background: var(--cat-screen); }
+
+  .tl-container { position: relative; padding-left: 120px; }
+  .tl-line {
+    position: absolute; left: 110px; top: 0; bottom: 0;
+    width: 2px; background: var(--line);
+  }
+  .tl-year {
+    position: relative; margin: 2rem 0 1.2rem; display: flex; align-items: center;
+    margin-left: -120px;
+  }
+  .tl-year-text {
+    font-family: 'DM Serif Display', serif; font-size: 1.3rem;
+    width: 100px; text-align: right; padding-right: 1.2rem;
+  }
+  .tl-year-dot {
+    position: absolute; left: 104px; width: 12px; height: 12px;
+    border-radius: 50%; background: var(--bg); border: 2.5px solid var(--line); z-index: 3;
+  }
+  .tl-year-line { flex: 1; height: 1px; background: var(--border); margin-left: 1.5rem; }
+
+  .tl-event {
+    position: relative; margin-bottom: 0.5rem;
+    transition: opacity 0.3s, transform 0.3s, height 0.3s, margin 0.3s;
+  }
+  .tl-event.hidden { opacity: 0; height: 0; margin: 0; overflow: hidden; pointer-events: none; }
+  .tl-event-date {
+    position: absolute; left: -120px; top: 0.6rem; width: 95px; text-align: right;
+    font-family: 'IBM Plex Mono', monospace; font-size: 0.68rem; color: var(--text-muted);
+  }
+  .tl-event-dot {
+    position: absolute; left: -15px; top: 0.7rem; width: 10px; height: 10px;
+    border-radius: 50%; border: 2.5px solid; background: var(--bg); z-index: 3;
+  }
+  .tl-event[data-cat="gastro"] .tl-event-dot { border-color: var(--cat-gastro); }
+  .tl-event[data-cat="hepato"] .tl-event-dot { border-color: var(--cat-hepato); }
+  .tl-event[data-cat="onco"] .tl-event-dot { border-color: var(--cat-onco); }
+  .tl-event[data-cat="cardio"] .tl-event-dot { border-color: var(--cat-cardio); }
+  .tl-event[data-cat="endo"] .tl-event-dot { border-color: var(--cat-endo); }
+  .tl-event[data-cat="chir"] .tl-event-dot { border-color: var(--cat-chir); }
+  .tl-event[data-cat="msk"] .tl-event-dot { border-color: var(--cat-msk); }
+  .tl-event[data-cat="lab"] .tl-event-dot { border-color: var(--cat-lab); }
+  .tl-event[data-cat="screen"] .tl-event-dot { border-color: var(--cat-screen); }
+
+  .tl-card {
+    background: var(--bg-card); border: 1px solid var(--border-light);
+    border-radius: 7px; padding: 0.6rem 0.85rem; cursor: pointer;
+    transition: box-shadow 0.2s; border-left: 3px solid transparent;
+  }
+  .tl-event:hover .tl-card { box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+  .tl-event[data-cat="gastro"] .tl-card { border-left-color: var(--cat-gastro); }
+  .tl-event[data-cat="hepato"] .tl-card { border-left-color: var(--cat-hepato); }
+  .tl-event[data-cat="onco"] .tl-card { border-left-color: var(--cat-onco); }
+  .tl-event[data-cat="cardio"] .tl-card { border-left-color: var(--cat-cardio); }
+  .tl-event[data-cat="endo"] .tl-card { border-left-color: var(--cat-endo); }
+  .tl-event[data-cat="chir"] .tl-card { border-left-color: var(--cat-chir); }
+  .tl-event[data-cat="msk"] .tl-card { border-left-color: var(--cat-msk); }
+  .tl-event[data-cat="lab"] .tl-card { border-left-color: var(--cat-lab); }
+  .tl-event[data-cat="screen"] .tl-card { border-left-color: var(--cat-screen); }
+
+  .tl-title {
+    font-weight: 600; font-size: 0.8rem;
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .tl-badge {
+    font-size: 0.58rem; font-weight: 500; padding: 0.12rem 0.45rem;
+    border-radius: 10px; margin-left: 0.5rem; white-space: nowrap;
+  }
+  .tl-event[data-cat="gastro"] .tl-badge { background: var(--cat-gastro-bg); color: var(--cat-gastro); }
+  .tl-event[data-cat="hepato"] .tl-badge { background: var(--cat-hepato-bg); color: var(--cat-hepato); }
+  .tl-event[data-cat="onco"] .tl-badge { background: var(--cat-onco-bg); color: var(--cat-onco); }
+  .tl-event[data-cat="cardio"] .tl-badge { background: var(--cat-cardio-bg); color: var(--cat-cardio); }
+  .tl-event[data-cat="endo"] .tl-badge { background: var(--cat-endo-bg); color: var(--cat-endo); }
+  .tl-event[data-cat="chir"] .tl-badge { background: var(--cat-chir-bg); color: var(--cat-chir); }
+  .tl-event[data-cat="msk"] .tl-badge { background: var(--cat-msk-bg); color: var(--cat-msk); }
+  .tl-event[data-cat="lab"] .tl-badge { background: var(--cat-lab-bg); color: var(--cat-lab); }
+  .tl-event[data-cat="screen"] .tl-badge { background: var(--cat-screen-bg); color: var(--cat-screen); }
+
+  .tl-summary { font-size: 0.74rem; color: var(--text-secondary); font-weight: 300; margin-top: 0.15rem; }
+  .tl-detail { max-height: 0; overflow: hidden; transition: max-height 0.4s ease; }
+  .tl-detail.open { max-height: 500px; padding-top: 0.5rem; }
+  .tl-detail-inner {
+    font-size: 0.73rem; color: var(--text-secondary); line-height: 1.6;
+    border-top: 1px solid var(--border-light); padding-top: 0.5rem;
+  }
+  .tl-detail-inner strong { font-weight: 600; color: var(--text-primary); }
+
+  /* ===================== FOOTER ===================== */
+  .site-footer {
+    text-align: center; padding: 2rem; font-size: 0.62rem;
+    color: var(--text-muted); border-top: 1px solid var(--border-light);
+  }
+
+  /* ===================== RESPONSIVE ===================== */
+  @media (max-width: 700px) {
+    .site-header h1 { font-size: 1.4rem; }
+    .tab-btn { font-size: 0.7rem; padding: 0.7rem 0.8rem; }
+    .triage-grid { grid-template-columns: 1fr 1fr; }
+    .tl-container { padding-left: 30px; }
+    .tl-line { left: 20px; }
+    .tl-year { margin-left: -30px; }
+    .tl-year-text { width: 50px; font-size: 1rem; padding-right: 0.6rem; }
+    .tl-year-dot { left: 14px; }
+    .tl-event-date {
+      position: relative; left: 0; width: auto; text-align: left; margin-bottom: 0.1rem;
+    }
+    .tl-event-dot { left: -25px; }
+    .panel-inner { padding: 1.5rem 1rem 3rem; }
+    .status-grid { grid-template-columns: 1fr; }
+  }
+
+  /* Print */
+  @media print {
+    .tab-nav, .tl-filter-bar, .privacy-bar { display: none; }
+    .tab-panel { display: block !important; page-break-before: always; }
+    .tab-panel:first-of-type { page-break-before: auto; }
+  }
+</style>
+</head>
+<body>
+
+<!-- =================== HEADER =================== -->
+<header class="site-header">
+  <div class="label">Profilo clinico integrato</div>
+  <h1>Portale Paziente 181257-F</h1>
+  <div class="sub">Donna, 68 anni — Percorso diagnostico-terapeutico 1998–2027</div>
+  <div class="meta">Documento anonimizzato — Ultimo aggiornamento: marzo 2026</div>
+  <div class="privacy-bar">
+    ⚕️ Documento anonimizzato e pubblicato con il consenso della paziente a scopo divulgativo ed educativo. Non contiene dati identificativi diretti.
+  </div>
+  <div class="patient-strip">
+    <div class="ps-item"><div class="ps-value">68</div><div class="ps-label">Anni</div></div>
+    <div class="ps-item"><div class="ps-value">23.9</div><div class="ps-label">BMI</div></div>
+    <div class="ps-item"><div class="ps-value">13</div><div class="ps-label">Problemi attivi</div></div>
+    <div class="ps-item"><div class="ps-value">5</div><div class="ps-label">Farmaci</div></div>
+    <div class="ps-item"><div class="ps-value">2</div><div class="ps-label">Risolti</div></div>
+  </div>
+</header>
+
+<!-- =================== NAVIGATION =================== -->
+<nav class="tab-nav">
+  <button class="tab-btn active" data-tab="dashboard"><span class="tab-icon">◉</span>Dashboard</button>
+  <button class="tab-btn" data-tab="timeline"><span class="tab-icon">◷</span>Timeline</button>
+  <button class="tab-btn" data-tab="chrono"><span class="tab-icon">☐</span>Cronoprogramma</button>
+  <button class="tab-btn" data-tab="schede"><span class="tab-icon">❖</span>Schede</button>
+</nav>
+
+<!-- ================================================================ -->
+<!-- TAB 1: DASHBOARD                                                  -->
+<!-- ================================================================ -->
+<div class="tab-panel active" id="panel-dashboard">
+<div class="panel-inner">
+
+  <div class="section-title">Matrice di Triage</div>
+  <div class="section-sub">Stratificazione dei 13 problemi clinici per livello di priorità</div>
+
+  <div class="triage-grid">
+    <div class="triage-col" data-pri="1">
+      <div class="triage-header">🔴 Intervento richiesto</div>
+      <div class="triage-item"><strong>Apparato epatobiliare:</strong> micro-calcolo distale 5 mm, colelitiasi + adenomiomatosi → ERCP + colecistectomia</div>
+    </div>
+    <div class="triage-col" data-pri="2">
+      <div class="triage-header">🔵 Sorveglianza attiva</div>
+      <div class="triage-item"><strong>Pancreas:</strong> IPMN-BD 7 mm stabile, no worrisome features</div>
+      <div class="triage-item"><strong>Fegato:</strong> disomogeneità ecografica, elastografia F0–F1, Gilbert</div>
+      <div class="triage-item"><strong>Crohn:</strong> remissione dal 2022, calprotectina borderline (202 µg/g)</div>
+    </div>
+    <div class="triage-col" data-pri="3">
+      <div class="triage-header">🟡 Gestione cronica</div>
+      <div class="triage-item"><strong>Cardiovascolare:</strong> prolasso mitrale, extrasistoli, dislipidemia, PA borderline</div>
+      <div class="triage-item"><strong>Endocrino/Osso:</strong> Hashimoto eutiroidea, osteopenia</div>
+      <div class="triage-item"><strong>Rene/Emato:</strong> cisti bilaterali, microlitiasi dubbia, deficit marziale</div>
+      <div class="triage-item"><strong>Minori:</strong> emorroidi, mastopatia fibrocistica, spondiloartrosi</div>
+      <div class="triage-item"><strong>HBV:</strong> non protetta → vaccinazione indicata</div>
+    </div>
+    <div class="triage-col" data-pri="4">
+      <div class="triage-header">🟢 Risolto / Storico</div>
+      <div class="triage-item"><strong>NET G1 appendicolare</strong> R0 (2020) — 3 PET negative, follow-up concluso</div>
+      <div class="triage-item"><strong>Gilbert:</strong> condizione benigna costituzionale</div>
+    </div>
+  </div>
+
+  <!-- Status cards by system -->
+  <div class="status-section">
+    <div class="status-section-title">Status card per apparato</div>
+    <div class="status-grid">
+      <div class="status-card" style="border-left-color:var(--cat-hepato)">
+        <div class="sc-head">
+          <div class="sc-title">🫁 Apparato biliare</div>
+          <span class="sc-badge badge-action">Intervento</span>
+        </div>
+        <div class="sc-body">Micro-calcolo pre-papillare 5 mm + colelitiasi con adenomiomatosi. Asintomatica. Amilasi/lipasi normali. Varianti anatomiche biliari documentate (confluenza posteriore dx, inserzione a cravatta del cistico).</div>
+        <div class="sc-action">→ ERCP + sfinterotomia → colecistectomia laparoscopica</div>
+      </div>
+      <div class="status-card" style="border-left-color:var(--cat-hepato)">
+        <div class="sc-head">
+          <div class="sc-title">🫁 Pancreas (IPMN-BD)</div>
+          <span class="sc-badge badge-stable">Stabile</span>
+        </div>
+        <div class="sc-body">Formazione 7 mm side-branch al corpo. Stabile tra RM 04/2025 e 12/2025. Assenza di worrisome features.</div>
+        <div class="sc-action">→ RM/MRCP sorveglianza a 18 mesi (≈ giugno 2027)</div>
+      </div>
+      <div class="status-card" style="border-left-color:var(--cat-hepato)">
+        <div class="sc-head">
+          <div class="sc-title">🫁 Fegato</div>
+          <span class="sc-badge badge-stable">No fibrosi</span>
+        </div>
+        <div class="sc-body">Disomogeneità eco stabile dal 2022. RM neg per lesioni e steatosi. Elastografia 5.5 kPa (F0–F1). Bilirubina indiretta ↑ compatibile con Gilbert.</div>
+        <div class="sc-action">→ Controllo semestrale enzimi epatici</div>
+      </div>
+      <div class="status-card" style="border-left-color:var(--cat-gastro)">
+        <div class="sc-head">
+          <div class="sc-title">🧬 Crohn</div>
+          <span class="sc-badge badge-watch">Monitorare</span>
+        </div>
+        <div class="sc-body">Ileale ± retto-sigmoidea, diagnosi 2019. Remissione clinica e biochimica dal 2022. Calprotectina: 233→65→202 µg/g (andamento oscillante).</div>
+        <div class="sc-action">→ Calprotectina + PCR/VES entro 3 mesi; colonscopia entro 11/2026</div>
+      </div>
+      <div class="status-card" style="border-left-color:var(--cat-cardio)">
+        <div class="sc-head">
+          <div class="sc-title">❤️ Cardiovascolare</div>
+          <span class="sc-badge badge-watch">Rivalutare</span>
+        </div>
+        <div class="sc-body">Prolasso lembo post. mitrale con insufficienza lieve, FE 65%. PVC 210/24h (< 1%), singole sotto sforzo (BBS dx). PA 135/80 a riposo, picco 195/76. LDL basale 187 (2021), in statina dal 2024.</div>
+        <div class="sc-action">→ Profilo lipidico completo + SCORE2; Holter ECG 12–24 mesi</div>
+      </div>
+      <div class="status-card" style="border-left-color:var(--cat-endo)">
+        <div class="sc-head">
+          <div class="sc-title">🦴 Hashimoto + Osso</div>
+          <span class="sc-badge badge-stable">Eutiroidismo</span>
+        </div>
+        <div class="sc-body">Hashimoto dal 2007, fase ipertiroidea TRAb-mediata risolta. TSH 2.04, eco tiroide norma. Osteopenia su menopausa chirurgica precoce (2006), Binosto dal 2024.</div>
+        <div class="sc-action">→ TSH annuale; DEXA 02/2026 per ridefinizione</div>
+      </div>
+      <div class="status-card" style="border-left-color:var(--cat-lab)">
+        <div class="sc-head">
+          <div class="sc-title">🩸 Marziale + HBV</div>
+          <span class="sc-badge badge-watch">Da completare</span>
+        </div>
+        <div class="sc-body">Ferritina 14 ng/mL (bassa) senza anemia (Hb 14.1). Anti-HBs 5 mUI/mL: non protetta, nessuna immunità documentabile.</div>
+        <div class="sc-action">→ Assetto marziale completo; vaccinazione HBV (0-1-6 mesi)</div>
+      </div>
+      <div class="status-card" style="border-left-color:var(--cat-onco)">
+        <div class="sc-head">
+          <div class="sc-title">✅ NET G1 appendicolare</div>
+          <span class="sc-badge badge-resolved">Risolto</span>
+        </div>
+        <div class="sc-body">3 mm, R0 (2020). Tre PET negative (2020, 2021, 2025). Non necessita più di follow-up oncologico strutturato.</div>
+        <div class="sc-action">→ Solo in caso di sintomi di allarme (sindrome carcinoide)</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Therapy -->
+  <div class="status-section">
+    <div class="status-section-title">Schema terapeutico in corso</div>
+    <table class="therapy-table">
+      <thead><tr><th>Farmaco</th><th>Posologia</th><th>Indicazione</th><th>Note</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><span class="pill-dot" style="background:#E67E22"></span><strong>Rosuvastatina</strong></td>
+          <td>10 mg/die</td><td>Dislipidemia / Rischio CV</td>
+          <td>Tollerata. Rivalutare dose dopo profilo lipidico</td>
+        </tr>
+        <tr>
+          <td><span class="pill-dot" style="background:#3498DB"></span><strong>Ursodesossicolico</strong> (Deursil)</td>
+          <td>450 mg/die</td><td>Supporto biliare (pre-ERCP)</td>
+          <td>Continuare fino a risoluzione chirurgica</td>
+        </tr>
+        <tr>
+          <td><span class="pill-dot" style="background:#F1C40F"></span><strong>Ac. Alendronico</strong> (Binosto)</td>
+          <td>70 mg/sett</td><td>Osteopenia/Osteoporosi</td>
+          <td>In corso dal 01/2024. Rivalutare dopo DEXA 02/2026</td>
+        </tr>
+        <tr>
+          <td><span class="pill-dot" style="background:#27AE60"></span><strong>Vitamina D</strong></td>
+          <td>Integrazione</td><td>Metabolismo osseo</td>
+          <td>25-OH attuale 64.6 ng/mL (ottimale — valutare riduzione?)</td>
+        </tr>
+        <tr>
+          <td><span class="pill-dot" style="background:#27AE60"></span><strong>Dobetin</strong></td>
+          <td>5000 UI i.m. 1 f/sett × 4 sett</td><td>Vitamina B12</td>
+          <td>Ciclo 2024. B12 attuale 259 pg/mL (adeguata)</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Biomarkers -->
+  <div class="status-section">
+    <div class="status-section-title">Cruscotto biomarcatori — Ottobre 2025</div>
+    <div class="bio-grid">
+      <div class="bio-card">
+        <div class="bio-value warn">25 / 23 / 22</div>
+        <div class="bio-label">AST / ALT / GGT (U/L)</div>
+        <div class="bio-ref">rif. 4–19 / 2.5–17 / 4–18</div>
+        <div class="bio-status" style="background:var(--cat-hepato-bg);color:var(--cat-hepato)">Lievemente ↑</div>
+      </div>
+      <div class="bio-card">
+        <div class="bio-value warn">1.39</div>
+        <div class="bio-label">Bilirubina tot (mg/dL)</div>
+        <div class="bio-ref">rif. ≤ 1.0 — ind. 1.19 (Gilbert)</div>
+        <div class="bio-status" style="background:var(--cat-hepato-bg);color:var(--cat-hepato)">Gilbert</div>
+      </div>
+      <div class="bio-card">
+        <div class="bio-value alert">14</div>
+        <div class="bio-label">Ferritina (ng/mL)</div>
+        <div class="bio-ref">rif. 10–90</div>
+        <div class="bio-status" style="background:var(--pri1-bg);color:var(--pri1)">Bassa</div>
+      </div>
+      <div class="bio-card">
+        <div class="bio-value ok">14.1</div>
+        <div class="bio-label">Emoglobina (g/dL)</div>
+        <div class="bio-ref">rif. 12–16</div>
+        <div class="bio-status" style="background:#E8F5E9;color:#2D7D46">Normale</div>
+      </div>
+      <div class="bio-card">
+        <div class="bio-value ok">2.04</div>
+        <div class="bio-label">TSH (µIU/mL)</div>
+        <div class="bio-ref">rif. 0.2–4.0</div>
+        <div class="bio-status" style="background:#E8F5E9;color:#2D7D46">Eutiroidismo</div>
+      </div>
+      <div class="bio-card">
+        <div class="bio-value ok">2.5</div>
+        <div class="bio-label">CEA (ng/mL)</div>
+        <div class="bio-ref">rif. ≤ 5.0</div>
+        <div class="bio-status" style="background:#E8F5E9;color:#2D7D46">Normale</div>
+      </div>
+      <div class="bio-card">
+        <div class="bio-value warn">202</div>
+        <div class="bio-label">Calprotectina (µg/g) — 02/2025</div>
+        <div class="bio-ref">< 50 norma · 50–200 grigio · > 200 ↑</div>
+        <div class="bio-status" style="background:var(--cat-hepato-bg);color:var(--cat-hepato)">Borderline ↑</div>
+      </div>
+      <div class="bio-card">
+        <div class="bio-value ok">5.5</div>
+        <div class="bio-label">Elastografia (kPa)</div>
+        <div class="bio-ref">F0–F1 (no fibrosi)</div>
+        <div class="bio-status" style="background:#E8F5E9;color:#2D7D46">Rassicurante</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Family risk map -->
+  <div class="status-section">
+    <div class="status-section-title">Anamnesi familiare — Mappa del rischio</div>
+    <div class="triage-grid" style="grid-template-columns: repeat(3, 1fr);">
+      <div class="triage-col" data-pri="1" style="border-top-color:var(--cat-cardio);background:var(--cat-cardio-bg)">
+        <div class="triage-header" style="color:var(--cat-cardio)">Cardiovascolare</div>
+        <div class="triage-item">Aterosclerosi multi-distrettuale (genitori + sorella)</div>
+        <div class="triage-item">Dislipidemia familiare</div>
+        <div class="triage-item">Diabete tipo 2 (padre, nonno)</div>
+      </div>
+      <div class="triage-col" data-pri="2" style="border-top-color:var(--cat-onco);background:var(--cat-onco-bg)">
+        <div class="triage-header" style="color:var(--cat-onco)">Oncologico</div>
+        <div class="triage-item">Epatocarcinoma (nonno materno)</div>
+        <div class="triage-item">Poliposi colon (fratello)</div>
+        <div class="triage-item">Ca vescica (fratello)</div>
+        <div class="triage-item">Ca mammella (zia materna + paterna)</div>
+      </div>
+      <div class="triage-col" data-pri="3" style="border-top-color:var(--cat-endo);background:var(--cat-endo-bg)">
+        <div class="triage-header" style="color:var(--cat-endo)">Autoimmune</div>
+        <div class="triage-item">Ipertiroidismo (sorella)</div>
+        <div class="triage-item">Gastrite autoimmune (sorella)</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+</div>
+
+<!-- ================================================================ -->
+<!-- TAB 2: TIMELINE                                                   -->
+<!-- ================================================================ -->
+<div class="tab-panel" id="panel-timeline">
+<div class="panel-inner">
+  <div class="section-title">Storia Clinica</div>
+  <div class="section-sub">28 anni di percorso diagnostico-terapeutico — 1998–2026</div>
+
+  <div class="tl-filter-bar">
+    <button class="tl-btn active" data-cat="all">Tutto</button>
+    <button class="tl-btn" data-cat="gastro">Gastro</button>
+    <button class="tl-btn" data-cat="hepato">Epatobiliare</button>
+    <button class="tl-btn" data-cat="onco">Oncologia</button>
+    <button class="tl-btn" data-cat="cardio">Cardio</button>
+    <button class="tl-btn" data-cat="endo">Endocrino</button>
+    <button class="tl-btn" data-cat="chir">Chirurgia</button>
+    <button class="tl-btn" data-cat="msk">Osso/MSK</button>
+    <button class="tl-btn" data-cat="lab">Lab</button>
+    <button class="tl-btn" data-cat="screen">Screening</button>
+  </div>
+
+  <div class="tl-container">
+    <div class="tl-line"></div>
+    <div id="tl-root"></div>
+  </div>
+</div>
+</div>
+
+<!-- ================================================================ -->
+<!-- TAB 3: CRONOPROGRAMMA                                             -->
+<!-- ================================================================ -->
+<div class="tab-panel" id="panel-chrono">
+<div class="panel-inner">
+  <div class="section-title">Cronoprogramma 2026–2027</div>
+  <div class="section-sub">Checklist interattiva delle scadenze cliniche — clicca per spuntare</div>
+
+  <div class="chrono-track">
+    <div class="chrono-line"></div>
+
+    <!-- Marzo 2026 -->
+    <div class="chrono-window" data-urgency="high">
+      <div class="chrono-dot"></div>
+      <div class="chrono-period">Entro Marzo 2026</div>
+      <div class="chrono-items">
+        <div class="chrono-card" onclick="toggleCheck(this)">
+          <div class="chrono-check"></div>
+          <div class="cc-content">
+            <div class="cc-title">ERCP con sfinterotomia</div>
+            <div class="cc-detail">Rimozione calcolo distale pre-papillare. Segnalare varianti biliari al chirurgo (confluenza posteriore dx, inserzione a cravatta cistico).</div>
+            <span class="cc-tag" style="background:var(--pri1-bg);color:var(--pri1)">Priorità 1</span>
+          </div>
+        </div>
+        <div class="chrono-card" onclick="toggleCheck(this)">
+          <div class="chrono-check"></div>
+          <div class="cc-content">
+            <div class="cc-title">Profilo lipidico completo</div>
+            <div class="cc-detail">CT, HDL, TG, LDL, non-HDL, ApoB, ApoA1, rapporto ApoB/A1, Lp(a) (una tantum).</div>
+            <span class="cc-tag" style="background:var(--cat-cardio-bg);color:var(--cat-cardio)">Cardio</span>
+          </div>
+        </div>
+        <div class="chrono-card" onclick="toggleCheck(this)">
+          <div class="chrono-check"></div>
+          <div class="cc-content">
+            <div class="cc-title">Metabolismo glucidico</div>
+            <div class="cc-detail">Glicemia a digiuno, insulina a digiuno (→ HOMA-IR), HbA1c.</div>
+            <span class="cc-tag" style="background:var(--cat-endo-bg);color:var(--cat-endo)">Endocrino</span>
+          </div>
+        </div>
+        <div class="chrono-card" onclick="toggleCheck(this)">
+          <div class="chrono-check"></div>
+          <div class="cc-content">
+            <div class="cc-title">Pannello epatico + pancreatico</div>
+            <div class="cc-detail">AST, ALT, GGT, FA, bilirubina tot/frazionata, INR, albumina (a digiuno), amilasi, lipasi.</div>
+            <span class="cc-tag" style="background:var(--cat-hepato-bg);color:var(--cat-hepato)">Epatobiliare</span>
+          </div>
+        </div>
+        <div class="chrono-card" onclick="toggleCheck(this)">
+          <div class="chrono-check"></div>
+          <div class="cc-content">
+            <div class="cc-title">Calprotectina fecale</div>
+            <div class="cc-detail">Controllo post-risalita (202 µg/g di 02/2025). Aggiungere PCR/VES.</div>
+            <span class="cc-tag" style="background:var(--cat-gastro-bg);color:var(--cat-gastro)">Gastro</span>
+          </div>
+        </div>
+        <div class="chrono-card" onclick="toggleCheck(this)">
+          <div class="chrono-check"></div>
+          <div class="cc-content">
+            <div class="cc-title">Assetto marziale completo</div>
+            <div class="cc-detail">Emocromo, transferrina, saturazione, ferritina. Se ↓ → ferro orale + rivalutazione 8–12 settimane.</div>
+            <span class="cc-tag" style="background:var(--cat-lab-bg);color:var(--cat-lab)">Lab</span>
+          </div>
+        </div>
+        <div class="chrono-card" onclick="toggleCheck(this)">
+          <div class="chrono-check"></div>
+          <div class="cc-content">
+            <div class="cc-title">CEA + CA 19-9</div>
+            <div class="cc-detail">Marcatori richiesti in previsione dell'intervento biliare.</div>
+            <span class="cc-tag" style="background:var(--cat-onco-bg);color:var(--cat-onco)">Marcatori</span>
+          </div>
+        </div>
+        <div class="chrono-card" onclick="toggleCheck(this)">
+          <div class="chrono-check"></div>
+          <div class="cc-content">
+            <div class="cc-title">APCA + ab anti-fattore intrinseco</div>
+            <div class="cc-detail">Screening gastrite autoimmune (familiarità: sorella affetta).</div>
+            <span class="cc-tag" style="background:var(--cat-screen-bg);color:var(--cat-screen)">Screening</span>
+          </div>
+        </div>
+        <div class="chrono-card" onclick="toggleCheck(this)">
+          <div class="chrono-check"></div>
+          <div class="cc-content">
+            <div class="cc-title">Densitometria DEXA</div>
+            <div class="cc-detail">Ridefinizione diagnostica (osteopenia vs osteoporosi). Valutazione Ca, P, vitamina D, PTH. Rivalutazione Binosto.</div>
+            <span class="cc-tag" style="background:var(--cat-msk-bg);color:var(--cat-msk)">Osso</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Post-ERCP -->
+    <div class="chrono-window" data-urgency="high">
+      <div class="chrono-dot"></div>
+      <div class="chrono-period">Post-ERCP (data da definire)</div>
+      <div class="chrono-items">
+        <div class="chrono-card" onclick="toggleCheck(this)">
+          <div class="chrono-check"></div>
+          <div class="cc-content">
+            <div class="cc-title">Colecistectomia laparoscopica</div>
+            <div class="cc-detail">Per colelitiasi + adenomiomatosi del fondo. Richiede expertise chirurgica per varianti anatomiche biliari.</div>
+            <span class="cc-tag" style="background:var(--pri1-bg);color:var(--pri1)">Priorità 1</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Maggio-Giugno 2026 -->
+    <div class="chrono-window" data-urgency="med">
+      <div class="chrono-dot"></div>
+      <div class="chrono-period">Maggio–Giugno 2026</div>
+      <div class="chrono-items">
+        <div class="chrono-card" onclick="toggleCheck(this)">
+          <div class="chrono-check"></div>
+          <div class="cc-content">
+            <div class="cc-title">Ecografia renale + urinalisi</div>
+            <div class="cc-detail">Follow-up microlitiasi sinistra 4.8 mm (natura dubbia). eGFR/ACR per nefroprotezione. Idratazione.</div>
+            <span class="cc-tag" style="background:var(--cat-lab-bg);color:var(--cat-lab)">Rene</span>
+          </div>
+        </div>
+        <div class="chrono-card" onclick="toggleCheck(this)">
+          <div class="chrono-check"></div>
+          <div class="cc-content">
+            <div class="cc-title">Inizio vaccinazione HBV</div>
+            <div class="cc-detail">Schema standard 0-1-6 mesi. Controllo anti-HBs 1–2 mesi dopo completamento (target ≥ 10 mUI/mL).</div>
+            <span class="cc-tag" style="background:var(--cat-screen-bg);color:var(--cat-screen)">Prevenzione</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Settembre 2026 -->
+    <div class="chrono-window" data-urgency="low">
+      <div class="chrono-dot"></div>
+      <div class="chrono-period">Settembre 2026 — Controllo annuale</div>
+      <div class="chrono-items">
+        <div class="chrono-card" onclick="toggleCheck(this)">
+          <div class="chrono-check"></div>
+          <div class="cc-content">
+            <div class="cc-title">Pannello metabolico/epatico annuale</div>
+            <div class="cc-detail">AST/ALT/GGT/FA/bilirubina, glicemia/HbA1c, profilo lipidico.</div>
+          </div>
+        </div>
+        <div class="chrono-card" onclick="toggleCheck(this)">
+          <div class="chrono-check"></div>
+          <div class="cc-content">
+            <div class="cc-title">TSH</div>
+            <div class="cc-detail">Monitoraggio annuale Hashimoto. FT3/FT4 se sintomi.</div>
+          </div>
+        </div>
+        <div class="chrono-card" onclick="toggleCheck(this)">
+          <div class="chrono-check"></div>
+          <div class="cc-content">
+            <div class="cc-title">Calprotectina fecale + PCR/VES</div>
+            <div class="cc-detail">Monitoraggio annuale Crohn in remissione.</div>
+          </div>
+        </div>
+        <div class="chrono-card" onclick="toggleCheck(this)">
+          <div class="chrono-check"></div>
+          <div class="cc-content">
+            <div class="cc-title">Holter ECG 24h</div>
+            <div class="cc-detail">Controllo a 12 mesi dal precedente (01/2026).</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Novembre 2026 -->
+    <div class="chrono-window" data-urgency="med">
+      <div class="chrono-dot"></div>
+      <div class="chrono-period">Entro Novembre 2026</div>
+      <div class="chrono-items">
+        <div class="chrono-card" onclick="toggleCheck(this)">
+          <div class="chrono-check"></div>
+          <div class="cc-content">
+            <div class="cc-title">Colonscopia di sorveglianza Crohn</div>
+            <div class="cc-detail">4 anni dall'ultima (11/2022). Anticipare se sintomi o biomarcatori positivi. Solo se indicato dal centro MICI.</div>
+            <span class="cc-tag" style="background:var(--cat-gastro-bg);color:var(--cat-gastro)">Gastro</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2026-2027 -->
+    <div class="chrono-window" data-urgency="routine">
+      <div class="chrono-dot"></div>
+      <div class="chrono-period">2026–2027</div>
+      <div class="chrono-items">
+        <div class="chrono-card" onclick="toggleCheck(this)">
+          <div class="chrono-check"></div>
+          <div class="cc-content">
+            <div class="cc-title">Elastografia epatica</div>
+            <div class="cc-detail">Ogni 24 mesi se utile per trend (ultima 09/2025 → finestra 2027).</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Giugno 2027 -->
+    <div class="chrono-window" data-urgency="med">
+      <div class="chrono-dot"></div>
+      <div class="chrono-period">Giugno 2027</div>
+      <div class="chrono-items">
+        <div class="chrono-card" onclick="toggleCheck(this)">
+          <div class="chrono-check"></div>
+          <div class="cc-content">
+            <div class="cc-title">RM/MRCP pancreas — sorveglianza IPMN</div>
+            <div class="cc-detail">A 18 mesi dall'ultimo controllo (12/2025). Proseguire secondo stabilità.</div>
+            <span class="cc-tag" style="background:var(--cat-hepato-bg);color:var(--cat-hepato)">Pancreas</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- end chrono-track -->
+</div>
+</div>
+
+<!-- ================================================================ -->
+<!-- TAB 4: SCHEDE PATOLOGIA                                           -->
+<!-- ================================================================ -->
+<div class="tab-panel" id="panel-schede">
+<div class="panel-inner">
+  <div class="section-title">Schede Esplicative</div>
+  <div class="section-sub">Informazioni divulgative sulle principali condizioni — clicca per espandere</div>
+
+  <!-- IPMN -->
+  <div class="scheda" onclick="toggleScheda(this)">
+    <div class="scheda-header" style="border-left-color:var(--cat-hepato)">
+      <div class="scheda-left">
+        <div class="scheda-icon" style="background:var(--cat-hepato-bg)">🫁</div>
+        <div><div class="scheda-name">IPMN — Neoplasia intraduttale papillare mucinosa</div>
+        <div class="scheda-status">Side-branch 7 mm · Stabile · No worrisome features</div></div>
+      </div>
+      <span class="scheda-arrow">▾</span>
+    </div>
+    <div class="scheda-body"><div class="scheda-content">
+      <div class="scheda-block">
+        <div class="scheda-block-title">Cos'è</div>
+        <p>L'IPMN è una lesione cistica del pancreas che origina dai dotti pancreatici. Produce mucina (un liquido denso) e forma piccole escrescenze papillari nell'epitelio del dotto. Si distinguono due tipi principali: quelle del dotto principale (più preoccupanti) e quelle dei rami secondari (side-branch), come nel suo caso.</p>
+      </div>
+      <div class="scheda-block">
+        <div class="scheda-block-title">Cosa significa nel suo caso</div>
+        <p>La lesione misura 7 mm, è localizzata al corpo del pancreas e origina da un ramo secondario. Non presenta "worrisome features" (caratteristiche preoccupanti come noduli murali, dilatazione del dotto principale, crescita rapida). Due risonanze magnetiche a 8 mesi di distanza hanno confermato stabilità dimensionale.</p>
+      </div>
+      <div class="scheda-block">
+        <div class="scheda-block-title">Perché si sorveglia</div>
+        <p>Pur essendo una lesione prevalentemente benigna, l'IPMN ha un potenziale (basso per le side-branch piccole) di trasformazione maligna nel lungo periodo. Le linee guida internazionali raccomandano sorveglianza con RM periodiche per verificare stabilità di dimensioni e assenza di nuove caratteristiche sospette.</p>
+      </div>
+      <div class="scheda-block">
+        <div class="scheda-block-title">Piano di sorveglianza</div>
+        <p>Prossima RM con sequenze MRCP prevista a circa 18 mesi dal controllo di dicembre 2025, cioè verso giugno 2027. Se stabile, gli intervalli si allungano progressivamente.</p>
+      </div>
+      <div class="scheda-highlight">💡 In sintesi: una piccola "cisti" del pancreas che va controllata nel tempo ma che attualmente non richiede alcun trattamento.</div>
+    </div></div>
+  </div>
+
+  <!-- NET -->
+  <div class="scheda" onclick="toggleScheda(this)">
+    <div class="scheda-header" style="border-left-color:var(--cat-onco)">
+      <div class="scheda-left">
+        <div class="scheda-icon" style="background:var(--cat-onco-bg)">✅</div>
+        <div><div class="scheda-name">NET G1 — Tumore neuroendocrino appendicolare</div>
+        <div class="scheda-status">3 mm · R0 (2020) · 3 PET negative · RISOLTO</div></div>
+      </div>
+      <span class="scheda-arrow">▾</span>
+    </div>
+    <div class="scheda-body"><div class="scheda-content">
+      <div class="scheda-block">
+        <div class="scheda-block-title">Cos'è</div>
+        <p>I tumori neuroendocrini (NET) sono neoplasie che originano da cellule del sistema neuroendocrino, sparse in tutto il corpo. L'appendice è una delle sedi più comuni. Il "grado G1" indica un tumore molto ben differenziato, con bassa attività proliferativa — il comportamento più favorevole possibile.</p>
+      </div>
+      <div class="scheda-block">
+        <div class="scheda-block-title">Cosa è successo</div>
+        <p>Nel suo caso, il NET è stato scoperto incidentalmente durante l'appendicectomia di agosto 2020 (eseguita per appendicite, non per il tumore). La lesione misurava solo 3 mm ed è stata rimossa completamente con margini chirurgici liberi (R0 = nessun tumore residuo al margine di resezione).</p>
+      </div>
+      <div class="scheda-block">
+        <div class="scheda-block-title">Sorveglianza e risultato</div>
+        <p>Sono state eseguite tre PET specialistiche (con Gallio-68 DOTATOC, la tecnica più sensibile per i NET) nel 2020, 2021 e 2025: tutte negative. Dopo 5 anni di sorveglianza senza alcun segno di malattia, il quadro è considerato a bassissimo rischio residuo.</p>
+      </div>
+      <div class="scheda-block">
+        <div class="scheda-block-title">Cosa fare ora</div>
+        <p>Non è più necessario un follow-up oncologico strutturato. L'unica indicazione è prestare attenzione a eventuali sintomi della sindrome carcinoide (vampate, forti dolori addominali, diarrea persistente non spiegata da altra causa) — evento estremamente improbabile.</p>
+      </div>
+      <div class="scheda-highlight">💡 In sintesi: un piccolo tumore benigno scoperto per caso, rimosso completamente, con 5 anni di controlli tutti negativi. Considerato guarito.</div>
+    </div></div>
+  </div>
+
+  <!-- Varianti biliari -->
+  <div class="scheda" onclick="toggleScheda(this)">
+    <div class="scheda-header" style="border-left-color:var(--cat-chir)">
+      <div class="scheda-left">
+        <div class="scheda-icon" style="background:var(--cat-chir-bg)">🔀</div>
+        <div><div class="scheda-name">Varianti anatomiche biliari</div>
+        <div class="scheda-status">Confluenza posteriore dx · Inserzione a cravatta del cistico</div></div>
+      </div>
+      <span class="scheda-arrow">▾</span>
+    </div>
+    <div class="scheda-body"><div class="scheda-content">
+      <div class="scheda-block">
+        <div class="scheda-block-title">Cosa sono</div>
+        <p>Le vie biliari (i "tubi" che trasportano la bile dal fegato all'intestino) hanno un'anatomia standard nella maggior parte delle persone, ma in una percentuale significativa (circa 30–40%) esistono varianti. Nel suo caso la RM ha documentato due varianti:</p>
+        <ul>
+          <li><strong>Confluenza posteriore del dotto epatico destro:</strong> il dotto che drena la parte posteriore del fegato destro si unisce al sistema biliare in una posizione diversa dal solito (confluisce nel dotto sinistro anziché nel destro).</li>
+          <li><strong>Inserzione "a cravatta" del dotto cistico:</strong> il dotto che collega la colecisti al coledoco si avvolge intorno a quest'ultimo prima di inserirsi, invece di inserirsi in linea retta.</li>
+        </ul>
+      </div>
+      <div class="scheda-block">
+        <div class="scheda-block-title">Perché è importante</div>
+        <p>Queste varianti non causano alcun sintomo né problema in sé. Diventano però informazioni critiche per il chirurgo in sede di ERCP e colecistectomia, perché modificano i "punti di riferimento anatomici" su cui si basa durante l'intervento. Senza questa consapevolezza aumenterebbe il rischio di lesioni iatrogene delle vie biliari.</p>
+      </div>
+      <div class="scheda-highlight">⚠️ Nota operativa: queste varianti devono essere esplicitamente segnalate al chirurgo e all'endoscopista prima di qualsiasi procedura sulle vie biliari.</div>
+    </div></div>
+  </div>
+
+  <!-- Crohn -->
+  <div class="scheda" onclick="toggleScheda(this)">
+    <div class="scheda-header" style="border-left-color:var(--cat-gastro)">
+      <div class="scheda-left">
+        <div class="scheda-icon" style="background:var(--cat-gastro-bg)">🧬</div>
+        <div><div class="scheda-name">Malattia di Crohn</div>
+        <div class="scheda-status">Ileale ± rettosigmoidea · Remissione dal 2022 · Calprotectina borderline</div></div>
+      </div>
+      <span class="scheda-arrow">▾</span>
+    </div>
+    <div class="scheda-body"><div class="scheda-content">
+      <div class="scheda-block">
+        <div class="scheda-block-title">Cos'è</div>
+        <p>La malattia di Crohn è una malattia infiammatoria cronica intestinale (MICI) che può colpire qualsiasi tratto del tubo digerente, ma più frequentemente l'ileo (l'ultima parte dell'intestino tenue) e il colon. È caratterizzata da fasi di attività (riacutizzazioni) e fasi di remissione.</p>
+      </div>
+      <div class="scheda-block">
+        <div class="scheda-block-title">La sua storia</div>
+        <p>Diagnosticata nel 2019 dopo un periodo di diarrea cronica. Localizzazione: ileo e retto-sigma. Nel 2020 un episodio di sub-occlusione. Dal 2022 in remissione clinica e biochimica: entero-RM e colonscopia normali. Attualmente non in terapia specifica per il Crohn.</p>
+      </div>
+      <div class="scheda-block">
+        <div class="scheda-block-title">La calprotectina fecale</div>
+        <p>È un marcatore di infiammazione intestinale. I valori nel suo caso oscillano: 233 µg/g (05/2023) → 65 (09/2024) → 202 (02/2025). L'ultimo valore è nella "zona grigia" (50–200 ambiguo, > 200 suggestivo di infiammazione). Non indica necessariamente una riacutizzazione, ma richiede monitoraggio ravvicinato.</p>
+      </div>
+      <div class="scheda-block">
+        <div class="scheda-block-title">Piano</div>
+        <p>Ripetere la calprotectina con PCR/VES entro 3 mesi. Colonscopia di sorveglianza entro novembre 2026 (4 anni dall'ultima). Il centro MICI rimane il riferimento per eventuali decisioni terapeutiche.</p>
+      </div>
+    </div></div>
+  </div>
+
+  <!-- Gilbert -->
+  <div class="scheda" onclick="toggleScheda(this)">
+    <div class="scheda-header" style="border-left-color:var(--cat-lab)">
+      <div class="scheda-left">
+        <div class="scheda-icon" style="background:var(--cat-lab-bg)">🧪</div>
+        <div><div class="scheda-name">Sindrome di Gilbert</div>
+        <div class="scheda-status">Bilirubina indiretta ↑ · Condizione benigna costituzionale</div></div>
+      </div>
+      <span class="scheda-arrow">▾</span>
+    </div>
+    <div class="scheda-body"><div class="scheda-content">
+      <div class="scheda-block">
+        <div class="scheda-block-title">Cos'è</div>
+        <p>La sindrome di Gilbert è una condizione ereditaria benigna molto comune (circa 5–10% della popolazione) in cui il fegato smaltisce la bilirubina un po' più lentamente del normale. Questo porta a livelli di bilirubina indiretta leggermente elevati nel sangue, senza alcuna conseguenza sulla salute.</p>
+      </div>
+      <div class="scheda-block">
+        <div class="scheda-block-title">Nel suo caso</div>
+        <p>La bilirubina totale è 1.39 mg/dL con indiretta 1.19 — valori tipici del Gilbert. Il figlio è anch'egli affetto, a conferma della natura familiare. È importante saperlo perché evita di attribuire erroneamente l'iperbilirubinemia ad altre patologie epatiche.</p>
+      </div>
+      <div class="scheda-highlight">💡 Non è una malattia ma una caratteristica genetica. Non richiede alcun trattamento né monitoraggio specifico.</div>
+    </div></div>
+  </div>
+
+  <!-- Elastografia -->
+  <div class="scheda" onclick="toggleScheda(this)">
+    <div class="scheda-header" style="border-left-color:var(--cat-hepato)">
+      <div class="scheda-left">
+        <div class="scheda-icon" style="background:var(--cat-hepato-bg)">📊</div>
+        <div><div class="scheda-name">Elastografia epatica — Come leggere i risultati</div>
+        <div class="scheda-status">5.5 kPa = F0–F1 · Nessuna fibrosi significativa</div></div>
+      </div>
+      <span class="scheda-arrow">▾</span>
+    </div>
+    <div class="scheda-body"><div class="scheda-content">
+      <div class="scheda-block">
+        <div class="scheda-block-title">Cos'è l'elastografia</div>
+        <p>L'elastografia (o FibroScan) misura la rigidità (stiffness) del fegato in kiloPascal (kPa). Un fegato sano è morbido; un fegato con fibrosi diventa progressivamente più rigido. È un esame non invasivo che sostituisce in molti casi la biopsia epatica.</p>
+      </div>
+      <div class="scheda-block">
+        <div class="scheda-block-title">La scala dei risultati</div>
+        <p>
+          F0–F1 (< 7 kPa): nessuna fibrosi o fibrosi minima — <strong>il suo risultato (5.5 kPa)</strong><br>
+          F2 (7–9.5 kPa): fibrosi moderata<br>
+          F3 (9.5–12.5 kPa): fibrosi avanzata<br>
+          F4 (> 12.5 kPa): cirrosi
+        </p>
+      </div>
+      <div class="scheda-highlight">💡 Il suo fegato è nella categoria migliore possibile. La disomogeneità vista all'ecografia non corrisponde a fibrosi reale.</div>
+    </div></div>
+  </div>
+
+</div>
+</div>
+
+<!-- =================== FOOTER =================== -->
+<footer class="site-footer">
+  Portale clinico integrato — Dati anonimizzati — Marzo 2026<br>
+  Realizzato a scopo divulgativo ed educativo
+</footer>
+
+<!-- =================== JAVASCRIPT =================== -->
+<script>
+// === Tab navigation ===
+document.querySelectorAll('.tab-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('panel-' + btn.dataset.tab).classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+});
+
+// === Checklist ===
+function toggleCheck(card) {
+  const check = card.querySelector('.chrono-check');
+  check.classList.toggle('checked');
+  card.classList.toggle('done');
+}
+
+// === Schede ===
+function toggleScheda(el) {
+  el.classList.toggle('open');
+}
+
+// === Timeline data ===
+const tlEvents = [
+  { year:1998, date:"1998", cat:"chir", title:"Chirurgia refrattiva", summary:"Intervento correttivo della vista", detail:"" },
+  { year:2006, date:"2006", cat:"chir", title:"Ovariectomia bilaterale", summary:"Endometriosi ovarica stadio avanzato → menopausa chirurgica", detail:"Intervento per endometriosi ovarica in stadio avanzato. Menopausa chirurgica precoce con implicazioni sul metabolismo osseo." },
+  { year:2007, date:"2007", cat:"endo", title:"Tiroidite di Hashimoto — esordio", summary:"Fase ipertiroidea TRAb-mediata; tapazole 2008–2010", detail:"Esordio con palpitazioni ed esoftalmo. Trattata con tapazole da 06/2008 a 09/2010. Evoluzione verso eutiroidismo stabile." },
+  { year:2015, date:"2015", cat:"screen", title:"Mastopatia fibrocistica", summary:"Diagnosi — follow-up mammografico in corso", detail:"Familiarità per ca mammella (zia materna + paterna). Follow-up aggiornato nel 2025." },
+  { year:2018, date:"2018", cat:"chir", title:"Pterigio bilaterale — I intervento", summary:"Chirurgia congiuntivale/corneale", detail:"" },
+  { year:2018, date:"2018–2019", cat:"gastro", title:"Esordio diarrea cronica", summary:"Iter diagnostico verso malattia di Crohn", detail:"Diarrea cronica senza febbre né sangue. Avviate indagini che porteranno alla diagnosi nel luglio 2019." },
+  { year:2019, date:"Lug 2019", cat:"gastro", title:"Colonscopia → diagnosi Crohn", summary:"Lesioni ileali e rettosigmoidee", detail:"Colonscopia con lesioni a livello ileale e retto-sigmoideo compatibili con malattia di Crohn." },
+  { year:2019, date:"Lug 2019", cat:"cardio", title:"Ecodoppler carotideo", summary:"Ispessimento intimale bilaterale", detail:"Familiarità per aterosclerosi multi-distrettuale (genitori + sorella) e dislipidemia familiare." },
+  { year:2020, date:"Mar 2020", cat:"gastro", title:"Sub-occlusione ileale", summary:"TAC positiva — complicanza del Crohn", detail:"" },
+  { year:2020, date:"Lug 2020", cat:"gastro", title:"Colonscopia + biopsie", summary:"Ileite attiva con granulomi non caseosi", detail:"Conferma istologica della diagnosi di Crohn." },
+  { year:2020, date:"Ago 2020", cat:"chir", title:"Appendicectomia → NET G1", summary:"Riscontro incidentale: NET 3 mm, R0", detail:"Appendicectomia per appendicite acuta. Istologia: NET G1 di 3 mm con margini liberi (R0)." },
+  { year:2020, date:"Ott 2020", cat:"onco", title:"PET/CT — negativa", summary:"Stadiazione NET: nessuna malattia residua", detail:"" },
+  { year:2021, date:"Apr 2021", cat:"lab", title:"Profilo lipidico basale", summary:"CT 240, LDL 187, HDL 39", detail:"Dislipidemia significativa con forte familiarità. Non ancora in terapia con statina." },
+  { year:2021, date:"Apr 2021", cat:"msk", title:"Densitometria DEXA", summary:"Osteopenia documentata", detail:"Da menopausa chirurgica precoce (2006). Base per prescrizione alendronato nel 2024." },
+  { year:2021, date:"Ott 2021", cat:"onco", title:"PET Ga-DOTATOC — negativa", summary:"2ª sorveglianza NET negativa", detail:"" },
+  { year:2022, date:"2022", cat:"gastro", title:"Crohn → remissione", summary:"Entero-RM e colonscopia 11/2022 normali", detail:"Remissione clinica e biochimica stabile dal 2022." },
+  { year:2022, date:"Dic 2022", cat:"hepato", title:"Eco addome + FibroScan", summary:"Disomogeneità epatica; stiffness 5.6 kPa; CAP 209", detail:"Fegato disomogeneo senza lesioni focali. FibroScan: F0–F1, CAP 209 (limiti per steatosi lieve)." },
+  { year:2023, date:"Mag 2023", cat:"gastro", title:"Calprotectina: 233 µg/g", summary:"Valore elevato — monitoraggio Crohn", detail:"Da confrontare con valori successivi: 65 (09/2024) poi 202 (02/2025)." },
+  { year:2024, date:"Gen 2024", cat:"msk", title:"Inizio Binosto", summary:"Alendronato 70 mg/sett per osteopenia", detail:"Su prescrizione ortopedica dopo DEXA 2021. Rivalutare dopo DEXA 02/2026." },
+  { year:2024, date:"2024", cat:"cardio", title:"Inizio Rosuvastatina 10 mg", summary:"Avvio terapia ipolipemizzante", detail:"Target LDL < 70 mg/dL con riduzione ≥ 50% dal basale (187)." },
+  { year:2024, date:"2024", cat:"chir", title:"Pterigio — II intervento", summary:"Re-intervento bilaterale", detail:"" },
+  { year:2024, date:"Set 2024", cat:"gastro", title:"Calprotectina: 65 µg/g", summary:"In calo — buon controllo", detail:"" },
+  { year:2025, date:"Feb 2025", cat:"gastro", title:"Calprotectina: 202 µg/g", summary:"Risalita borderline — da rivalutare", detail:"Paziente clinicamente asintomatica. Ripetere entro 3 mesi." },
+  { year:2025, date:"Mar 2025", cat:"endo", title:"Eco tiroide — nella norma", summary:"Follow-up Hashimoto negativo", detail:"" },
+  { year:2025, date:"Mar 2025", cat:"onco", title:"PET DOTATOC — negativa", summary:"5 anni: NET → problema risolto", detail:"3ª PET negativa. Follow-up oncologico strutturato non più necessario." },
+  { year:2025, date:"Apr 2025", cat:"hepato", title:"RM addome superiore", summary:"IPMN 7 mm; calcolo pre-papillare; varianti biliari", detail:"<strong>Tre riscontri:</strong> IPMN-BD 7 mm senza worrisome features; micro-calcolo 5 mm pre-papillare; varianti biliari (confluenza posteriore dx + inserzione a cravatta cistico)." },
+  { year:2025, date:"Apr 2025", cat:"screen", title:"Screening celiachia", summary:"EMA neg, tTG neg, IgE < 17 — esclusa", detail:"" },
+  { year:2025, date:"Set 2025", cat:"hepato", title:"Eco + elastografia", summary:"Elastografia 5.5 kPa (F0–F1); microlitiasi renale sx dubbia", detail:"Disomogeneità stabile. No fibrosi. Cisti renali bilaterali ≤ 1 cm." },
+  { year:2025, date:"Ott 2025", cat:"lab", title:"Laboratorio completo", summary:"Transaminasi lievi ↑; ferritina 14; anti-HBs 5", detail:"<strong>Epatico:</strong> AST 25, ALT 23, GGT 22 (↑ lievi). Gilbert.<br><strong>Marziale:</strong> Ferritina 14 (bassa), Hb 14.1.<br><strong>HBV:</strong> non protetta → vaccinazione.<br><strong>TSH:</strong> 2.04 (eutiroidismo)." },
+  { year:2025, date:"Nov 2025", cat:"hepato", title:"Visita epatobiliare", summary:"IPMN stabile; ERCP programmata", detail:"IPMN < 2 cm senza worrisome features. Calcolo distale: ERCP + colecistectomia programmati." },
+  { year:2025, date:"Dic 2025", cat:"hepato", title:"RM addome con mdc", summary:"IPMN stabile a 8 mesi; fegato norma", detail:"IPMN stabile. Calcolo confermato. Nessuna steatosi." },
+  { year:2025, date:"Dic 2025", cat:"cardio", title:"ECG + Ecocardiogramma", summary:"Prolasso mitrale post. lieve; FE 65%", detail:"Insufficienza mitralica lieve. PA 135/80." },
+  { year:2026, date:"Gen 2026", cat:"cardio", title:"ECG da sforzo", summary:"PVC da sforzo (BBS dx); PA borderline sotto sforzo", detail:"Picco 195/76 mmHg." },
+  { year:2026, date:"Gen 2026", cat:"cardio", title:"Holter ECG 24h", summary:"210 PVC, 2 coppie; no aritmie sostenute", detail:"FC media 68 bpm. Carico ectopico < 1%. Controllo 12–24 mesi." },
+  { year:2026, date:"Feb 2026", cat:"msk", title:"DEXA programmata", summary:"Rivalutazione dopo 2 anni di Binosto", detail:"Ridefinizione osteopenia vs osteoporosi. Richiedere Ca, P, vit D, PTH." },
+  { year:2026, date:"2026", cat:"hepato", title:"ERCP + colecistectomia (programm.)", summary:"Rimozione calcolo → colecistectomia lap.", detail:"<strong>⚠️</strong> Segnalare varianti biliari al chirurgo. Rischio pancreatite post-ERCP 5–11% vs rischio colangite." },
+];
+
+// Render timeline
+const tlRoot = document.getElementById('tl-root');
+let curYear = null;
+const catLabels = { gastro:'Gastro', hepato:'Epatobiliare', onco:'Oncologia', cardio:'Cardio', endo:'Endocrino', chir:'Chirurgia', msk:'MSK', lab:'Lab', screen:'Screening' };
+
+tlEvents.forEach(ev => {
+  if (ev.year !== curYear) {
+    curYear = ev.year;
+    tlRoot.innerHTML += `<div class="tl-year"><span class="tl-year-text">${ev.year}</span><div class="tl-year-dot"></div><div class="tl-year-line"></div></div>`;
+  }
+  const hasD = ev.detail && ev.detail.length > 0;
+  tlRoot.innerHTML += `
+    <div class="tl-event" data-cat="${ev.cat}" ${hasD ? 'onclick="toggleTlDetail(this)"' : ''}>
+      <div class="tl-event-date">${ev.date}</div>
+      <div class="tl-event-dot"></div>
+      <div class="tl-card">
+        <div class="tl-title"><span>${ev.title}</span><span class="tl-badge">${catLabels[ev.cat]||ev.cat}</span></div>
+        <div class="tl-summary">${ev.summary}</div>
+        ${hasD ? `<div class="tl-detail"><div class="tl-detail-inner">${ev.detail}</div></div>` : ''}
+      </div>
+    </div>`;
+});
+
+function toggleTlDetail(el) {
+  const d = el.querySelector('.tl-detail');
+  if (d) d.classList.toggle('open');
+}
+
+// Timeline filters
+document.querySelectorAll('.tl-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.tl-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    const cat = btn.dataset.cat;
+    document.querySelectorAll('.tl-event').forEach(ev => {
+      ev.classList.toggle('hidden', cat !== 'all' && ev.dataset.cat !== cat);
+    });
+    document.querySelectorAll('.tl-year').forEach(ym => {
+      let next = ym.nextElementSibling;
+      let vis = false;
+      while (next && !next.classList.contains('tl-year')) {
+        if (next.classList.contains('tl-event') && !next.classList.contains('hidden')) { vis = true; break; }
+        next = next.nextElementSibling;
+      }
+      ym.style.display = vis ? '' : 'none';
+    });
+  });
+});
+</script>
+</body>
+</html>

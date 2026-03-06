@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Video Guida — Profilo Clinico Sintetico</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap');
+
+  :root {
+    --bg: #F7F5F0;
+    --bg-card: #FFFFFF;
+    --text-primary: #1A1A1A;
+    --text-secondary: #5A5A5A;
+    --text-muted: #8A8A8A;
+    --border: #E0DCD4;
+    --border-light: #EDE9E2;
+    --accent: #B8860B;
+    --accent-light: #F5ECD7;
+    --err-bg: #FFF0F0; --err-border: #E8B4B4; --err-text: #9B2C2C;
+    --ok-bg: #E8F5E9; --ok-text: #2D7D46;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'IBM Plex Sans', sans-serif;
+    background: var(--bg); color: var(--text-primary);
+    line-height: 1.6; -webkit-font-smoothing: antialiased;
+  }
+
+  .header {
+    background: linear-gradient(180deg, #FFFFFF 0%, var(--bg) 100%);
+    border-bottom: 1px solid var(--border);
+    padding: 2rem 2rem 1.5rem; text-align: center;
+  }
+  .header-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.65rem; letter-spacing: 0.2em; text-transform: uppercase;
+    color: var(--accent);
+  }
+  .header h1 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.65rem; font-weight: 400; margin: 0.3rem 0 0.15rem;
+    max-width: 600px; margin-left: auto; margin-right: auto;
+  }
+  .header .sub { font-size: 0.82rem; color: var(--text-secondary); font-weight: 300; }
+  .back-link {
+    display: inline-block; margin-top: 0.8rem;
+    font-size: 0.72rem; color: var(--accent);
+    text-decoration: none; border: 1px solid var(--accent);
+    padding: 0.3rem 0.8rem; border-radius: 16px; transition: all 0.2s;
+  }
+  .back-link:hover { background: var(--accent); color: #fff; }
+
+  /* Video player */
+  .video-wrap {
+    max-width: 750px; margin: 1.5rem auto 0;
+    padding: 0 1.5rem;
+  }
+  .video-wrap video {
+    width: 100%; border-radius: 10px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    background: #000;
+  }
+
+  /* Corrections summary */
+  .corrections-bar {
+    max-width: 700px; margin: 1.2rem auto;
+    padding: 0.7rem 1rem; background: var(--err-bg);
+    border: 1px solid var(--err-border); border-radius: 8px;
+    font-size: 0.78rem; color: var(--err-text);
+  }
+  .corrections-bar strong { font-weight: 600; }
+
+  /* Transcript */
+  .transcript {
+    max-width: 700px; margin: 0.5rem auto 4rem; padding: 0 1.5rem;
+  }
+  .t-seg {
+    padding: 0.4rem 0.6rem; margin-bottom: 0.1rem;
+    border-radius: 5px; cursor: pointer; transition: background 0.2s;
+    border-left: 3px solid transparent;
+  }
+  .t-seg:hover { background: rgba(0,0,0,0.02); }
+  .t-seg.active { background: var(--accent-light); border-left-color: var(--accent); }
+  .t-time {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.58rem; color: var(--text-muted); display: inline-block; margin-bottom: 0.1rem;
+  }
+  .t-text { font-size: 0.84rem; color: var(--text-primary); line-height: 1.5; }
+  .t-err {
+    background: var(--err-bg); text-decoration: line-through;
+    text-decoration-color: var(--err-text); color: var(--err-text);
+    padding: 0.02rem 0.2rem; border-radius: 3px; font-size: 0.8rem;
+  }
+  .t-fix {
+    background: var(--ok-bg); color: var(--ok-text); font-weight: 600;
+    padding: 0.02rem 0.25rem; border-radius: 3px; font-size: 0.8rem;
+  }
+
+  .footer {
+    text-align: center; padding: 2rem; font-size: 0.62rem;
+    color: var(--text-muted); border-top: 1px solid var(--border-light);
+  }
+
+  @media (max-width: 600px) {
+    .header h1 { font-size: 1.3rem; }
+    .video-wrap { padding: 0 0.8rem; }
+    .transcript { padding: 0 0.8rem; }
+  }
+</style>
+</head>
+<body>
+
+<header class="header">
+  <div class="header-label">Video guida con revisione editoriale</div>
+  <h1>Profilo Clinico Sintetico — Guida Narrata</h1>
+  <div class="sub">Video generato da NotebookLM — Transcript con correzioni essenziali</div>
+  <div style="margin-top:0.4rem;font-size:0.72rem;color:var(--text-muted)">Durata: 7:07 — Voce singola</div>
+  <a href="portale-clinico-integrato.html" class="back-link">← Torna al portale</a>
+</header>
+
+<div class="video-wrap">
+  <video id="video" controls preload="metadata">
+    <source src="video-guida.mp4" type="video/mp4">
+    Il tuo browser non supporta il tag video.
+  </video>
+</div>
+
+<div class="corrections-bar">
+  ⚠️ <strong>6 correzioni segnalate</strong> nel transcript (barrato rosso + correzione verde). Il contenuto clinico è complessivamente accurato e fedele alla relazione originale.
+</div>
+
+<div class="transcript" id="transcript"></div>
+
+<footer class="footer">
+  Video: NotebookLM (Google) — Revisione editoriale: marzo 2026<br>
+  Documento anonimizzato e pubblicato con il consenso della paziente
+</footer>
+
+<script>
+const segments = [
+  { t: 0, text: "Spesso un riassunto clinico sembra scritto in un'altra lingua, vero? Un elenco di termini tecnici, date, valori, è facile sentirsi un po' persi." },
+  { t: 9, text: "Bene, oggi faremo esattamente questo. Trasformeremo questo documento, che può sembrare così complesso, in una storia chiara, con un piano d'azione concreto." },
+  { t: 18, text: "Insieme faremo un po' di ordine e capiremo quali sono le vere priorità. E per fare chiarezza seguiremo un percorso molto preciso." },
+  { t: 25, text: "Prima di tutto guarderemo al quadro d'insieme, poi ci concentreremo sulle cose da fare subito, dopodiché passeremo a ciò che va tenuto d'occhio nel tempo, alle condizioni che sono già ben gestite e, importantissimo, ai punti di forza." },
+  { t: 39, text: "Alla fine avremo una roadmap chiara e semplice per il futuro. Allora, iniziamo." },
+  { t: 44, text: "È assolutamente normale, guardando un documento medico, sentirsi un po' sopraffatti. Il nostro primo passo, quindi, è proprio questo, riconoscere che è complesso. Non per spaventarci, ma per poterlo pezzetto dopo pezzetto rendere più semplice e comprensibile." },
+  { t: 60, text: "Ecco, questo è il cambio di prospettiva fondamentale. Non stiamo guardando una semplice lista di problemi. Quella che abbiamo davanti è la fotografia di un intero percorso di salute." },
+  { t: 69, text: "Ogni singola voce, anche quelle che riguardano questioni ormai risolte, racconta un pezzo di storia e ci aiuta a vedere il quadro completo." },
+  { t: 77, text: "Ok, ora che abbiamo il contesto andiamo al sodo. Qual è la cosa più importante? Cosa richiede attenzione adesso? Isolare le priorità è il passo cruciale per non perdersi, e soprattutto per agire dove serve davvero." },
+  { t: 90, text: "Ed eccolo qui, il punto focale. Le ultime risonanze magnetiche hanno mostrato un piccolo calcolo di circa 5 mm nel dotto biliare. Anche se al momento non sta dando sintomi, è la questione più urgente da affrontare, proprio per evitare che crei problemi in futuro." },
+  { t: 107, text: "E come si affronta? Con una procedura che si chiama ERCP. Non lasciamoci impressionare dalla sigla. In pratica è un intervento mininvasivo." },
+  { t: 115, text: "Si usa un tubicino flessibile con una telecamera che viene guidato con delicatezza attraverso la bocca fino a raggiungere i dotti biliari e semplicemente rimuovere il calcolo." },
+  { t: 125, text: "Certo, ogni procedura ha un suo profilo di rischio ed è giusto valutarlo. In questo caso mettiamo sulla bilancia le due opzioni." },
+  { t: 133, text: "Da una parte c'è una piccola probabilità, tra il 5 e l'11%, di avere una pancreatite lieve dopo l'intervento, che di solito si risolve bene. Dall'altra c'è il rischio ben più serio di una colangite, un'infezione grave se il calcolo resta lì. Insomma, capite bene che la scelta è piuttosto chiara." },
+  { t: 151, text: "Quindi il percorso è molto chiaro e si articola in tre passaggi. Primo, si fanno alcuni esami del sangue di preparazione. Secondo, si esegue l'ERCP per togliere il calcolo." },
+  { t: 161, text: "Terzo, più avanti, si farà un piccolo intervento in <span class='t-err'>lafaroscopia</span> <span class='t-fix'>laparoscopia</span> per rimuovere la cistifellea, che è dove i calcoli si formano, così da risolvere il problema alla radice." },
+  { t: 171, text: "Perfetto. Archiviata l'urgenza, passiamo a quelle condizioni che non richiedono un'azione immediata, ma un monitoraggio attento e costante. Questa è diciamo la nostra lista di controllo per il futuro." },
+  { t: 184, text: "Questa timeline ci aiuta a visualizzare bene il piano. Abbiamo due appuntamenti chiave da segnare sul calendario: una colonoscopia di controllo per la malattia di Crohn entro novembre 2026 e una risonanza per il pancreas verso giugno 2027." },
+  { t: 198, text: "Avere delle scadenze precise aiuta a gestire tutto senza ansia, in modo proattivo." },
+  { t: 204, text: "Soffermiamoci un attimo su questa sigla IPMN che può suonare un po' strana. Si tratta di una piccola cisti di circa 7 mm nel pancreas. La cosa più importante, e i referti lo sottolineano, è che è stabile e non presenta caratteristiche preoccupanti." },
+  { t: 220, text: "Proprio per questo la strategia non è intervenire, ma semplicemente tenerla d'occhio nel tempo." },
+  { t: 226, text: "E per quanto riguarda la malattia di Crohn? Al momento la situazione è tranquilla, la malattia è in remissione. E allora perché continuare a controllare? Potrebbe chiedersi qualcuno." },
+  { t: 236, text: "Beh, questo grafico ce lo spiega benissimo. I livelli di calprotectina, che è un marcatore dell'infiammazione, hanno avuto degli alti e bassi. Questa variabilità, anche senza sintomi, ci dice che è saggio fare controlli periodici." },
+  { t: 249, text: "Adesso passiamo alle buone notizie, a quelle condizioni croniche che grazie alle cure e a uno stile di vita attento sono ben gestite. Queste sono le fondamenta stabili su cui poggia la salute generale." },
+  { t: 261, text: "La gestione della <span class='t-err'>dislepidemia</span> <span class='t-fix'>dislipidemia</span>, per esempio, è un caso da manuale. Non si tratta solo di avere il colesterolo alto." },
+  { t: 268, text: "Si tratta di avere degli obiettivi precisi, misurabili, come quelli che vediamo qui. La terapia punta a portare il colesterolo LDL, l'ApoB e altri valori sotto soglie ben definite. Questo trasforma una diagnosi generica in un traguardo chiaro da raggiungere." },
+  { t: 285, text: "E non è finita qui, ci sono altre situazioni tenute benissimo sotto controllo. La tiroidite di Hashimoto è stabile, i valori sono a posto. L'osteopenia è in trattamento e verrà rivalutata con un nuovo esame. E anche il fegato, sebbene mostri una lieve alterazione, non ha fibrosi significativa. E questa è un'ottima, ottima notizia." },
+  { t: 304, text: "Nessun quadro clinico è davvero completo se non si considerano anche gli aspetti positivi, le risorse personali. Adesso, quindi, spostiamo il focus dai problemi alle forze, perché sono un elemento chiave per una visione completa della salute." },
+  { t: 319, text: "E qui arriviamo a una notizia davvero fondamentale. Nel 2020 è stato rimosso un piccolo tumore neuroendocrino. Le sigle G1 e R0 sono importantissime. G1 significa che era a basso grado, quindi poco aggressivo, e R0 vuol dire che è stato tolto completamente." },
+  { t: 335, text: "Tutti i controlli fatti dopo sono risultati negativi. Per questo possiamo dirlo con certezza. Questo capitolo è chiuso. È un problema risolto." },
+  { t: 343, text: "E poi non dimentichiamoci mai delle fondamenta, di quello che è lo stile di vita. Non fumare, non bere alcol, fare uno sport intenso come il canottaggio e avere un lavoro attivo. Questi non sono dettagli." },
+  { t: 357, text: "Questi sono dei veri e propri scudi protettivi, fattori che <span class='t-err'>contribuistono</span> <span class='t-fix'>contribuiscono</span> attivamente e potentemente alla salute generale." },
+  { t: 364, text: "Bene, siamo arrivati alla fine del nostro percorso. Adesso è il momento di raccogliere tutte queste informazioni e trasformarle in una roadmap semplice, chiara, un <span class='t-err'>promemorio</span> <span class='t-fix'>promemoria</span> pratico per il futuro." },
+  { t: 376, text: "Ed eccola qui, riassunta in un'unica tabella: le cose più immediate da fare entro marzo 2026, come gli esami, le <span class='t-err'>RCP</span> <span class='t-fix'>ERCP</span> e la densitometria. Poi un controllo ai reni a metà anno, la colonoscopia entro fine 2026 e infine la risonanza al pancreas nel 2027." },
+  { t: 394, text: "Avere un piano così visivo, così schematico, trasforma l'incertezza in un senso di controllo." },
+  { t: 400, text: "E concludiamo con questa riflessione. Abbiamo visto come, partendo da un documento che sembrava un groviglio di informazioni, siamo riusciti a estrarre un percorso logico e lineare." },
+  { t: 410, text: "Separando le urgenze dalla <span class='t-err'>sorveglienza</span> <span class='t-fix'>sorveglianza</span> e bilanciando i problemi con i punti di forza, la complessità si dissolve." },
+  { t: 417, text: "E questo dimostra che la comprensione è davvero il primo fondamentale passo per trasformare una serie di diagnosi in un viaggio di salute consapevole e soprattutto gestibile." },
+];
+
+// Render
+const container = document.getElementById('transcript');
+segments.forEach((seg, i) => {
+  const m = Math.floor(seg.t / 60);
+  const s = seg.t % 60;
+  const ts = m + ':' + (s < 10 ? '0' : '') + s;
+  const div = document.createElement('div');
+  div.className = 't-seg';
+  div.dataset.start = seg.t;
+  div.innerHTML = `<div class="t-time">${ts}</div><div class="t-text">${seg.text}</div>`;
+  div.addEventListener('click', () => {
+    const v = document.getElementById('video');
+    v.currentTime = seg.t;
+    v.play();
+  });
+  container.appendChild(div);
+});
+
+// Sync highlight
+const video = document.getElementById('video');
+const segs = document.querySelectorAll('.t-seg');
+
+video.addEventListener('timeupdate', () => {
+  const t = video.currentTime;
+  let active = null;
+  segs.forEach(s => {
+    s.classList.remove('active');
+    if (t >= parseFloat(s.dataset.start)) active = s;
+  });
+  if (active) {
+    active.classList.add('active');
+    const rect = active.getBoundingClientRect();
+    if (rect.top < 100 || rect.bottom > window.innerHeight - 50) {
+      active.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+  }
+});
+</script>
+</body>
+</html>

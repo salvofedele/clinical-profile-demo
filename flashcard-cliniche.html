@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Flashcard Cliniche — Paziente 181257-F</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap');
+
+  :root {
+    --bg: #F7F5F0;
+    --bg-card: #FFFFFF;
+    --text-primary: #1A1A1A;
+    --text-secondary: #5A5A5A;
+    --text-muted: #8A8A8A;
+    --border: #E0DCD4;
+    --border-light: #EDE9E2;
+    --accent: #B8860B;
+    --accent-light: #F5ECD7;
+    --green: #2D7D46;
+    --green-bg: #E8F5E9;
+    --blue: #1565C0;
+    --blue-bg: #E3F2FD;
+    --red: #C62828;
+    --red-bg: #FFEBEE;
+    --amber: #8B6914;
+    --amber-bg: #FFF8E1;
+    --purple: #6A1B9A;
+    --purple-bg: #F3E5F5;
+    --teal: #00695C;
+    --teal-bg: #E0F2F1;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'IBM Plex Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text-primary);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    min-height: 100vh;
+  }
+
+  .header {
+    background: linear-gradient(180deg, #FFFFFF 0%, var(--bg) 100%);
+    border-bottom: 1px solid var(--border);
+    padding: 2rem 2rem 1.5rem;
+    text-align: center;
+  }
+  .header-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.65rem; letter-spacing: 0.2em; text-transform: uppercase;
+    color: var(--accent);
+  }
+  .header h1 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.8rem; font-weight: 400; margin: 0.3rem 0 0.15rem;
+  }
+  .header .sub {
+    font-size: 0.82rem; color: var(--text-secondary); font-weight: 300;
+  }
+  .back-link {
+    display: inline-block; margin-top: 0.8rem;
+    font-size: 0.72rem; color: var(--accent);
+    text-decoration: none; border: 1px solid var(--accent);
+    padding: 0.3rem 0.8rem; border-radius: 16px;
+    transition: all 0.2s;
+  }
+  .back-link:hover { background: var(--accent); color: #fff; }
+
+  /* Controls bar */
+  .controls {
+    max-width: 700px; margin: 0 auto;
+    padding: 1.2rem 1.5rem;
+    display: flex; flex-wrap: wrap; gap: 0.5rem;
+    justify-content: center; align-items: center;
+  }
+  .cat-btn {
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 0.68rem; font-weight: 500;
+    padding: 0.25rem 0.65rem; border-radius: 16px;
+    border: 1.5px solid var(--border); background: var(--bg-card);
+    color: var(--text-secondary); cursor: pointer; transition: all 0.2s;
+  }
+  .cat-btn:hover { border-color: var(--text-muted); }
+  .cat-btn.active { background: var(--text-primary); color: #fff; border-color: transparent; }
+
+  /* Stats strip */
+  .stats {
+    display: flex; justify-content: center; gap: 2rem;
+    padding: 0 1.5rem 1rem; max-width: 600px; margin: 0 auto;
+  }
+  .stat { text-align: center; }
+  .stat-num {
+    font-family: 'DM Serif Display', serif; font-size: 1.5rem; color: var(--accent);
+  }
+  .stat-label {
+    font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.12em;
+    color: var(--text-muted); font-weight: 500;
+  }
+
+  /* Mode toggle */
+  .mode-bar {
+    display: flex; justify-content: center; gap: 0; margin-bottom: 1.5rem;
+    max-width: 700px; margin: 0 auto 1.5rem;
+    border-bottom: 2px solid var(--border);
+  }
+  .mode-btn {
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 0.78rem; font-weight: 500;
+    padding: 0.7rem 1.5rem; border: none; background: none;
+    color: var(--text-muted); cursor: pointer;
+    border-bottom: 2.5px solid transparent; transition: all 0.2s;
+  }
+  .mode-btn:hover { color: var(--text-secondary); }
+  .mode-btn.active { color: var(--accent); border-bottom-color: var(--accent); }
+
+  /* ============ FLASHCARD VIEW ============ */
+  .flash-container {
+    max-width: 600px; margin: 0 auto; padding: 0 1.5rem 3rem;
+    perspective: 1200px;
+  }
+
+  .flash-progress {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 1rem; font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.7rem; color: var(--text-muted);
+  }
+  .progress-bar {
+    flex: 1; height: 4px; background: var(--border-light);
+    border-radius: 2px; margin: 0 1rem; overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%; background: var(--accent); border-radius: 2px;
+    transition: width 0.4s ease;
+  }
+
+  .flash-card-wrapper {
+    position: relative; width: 100%; padding-bottom: 65%;
+    margin-bottom: 1rem;
+  }
+  .flash-card {
+    position: absolute; inset: 0;
+    transform-style: preserve-3d;
+    transition: transform 0.55s cubic-bezier(0.4, 0, 0.2, 1);
+    cursor: pointer;
+  }
+  .flash-card.flipped { transform: rotateY(180deg); }
+
+  .flash-face {
+    position: absolute; inset: 0;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    border-radius: 12px; padding: 2rem 1.8rem;
+    display: flex; flex-direction: column;
+    justify-content: center; align-items: center;
+    text-align: center;
+    border: 1px solid var(--border-light);
+    box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+  }
+  .flash-front {
+    background: var(--bg-card);
+  }
+  .flash-back {
+    background: linear-gradient(135deg, #FAFAF7 0%, #F0EDE5 100%);
+    transform: rotateY(180deg);
+  }
+
+  .flash-cat-badge {
+    position: absolute; top: 1rem; left: 1rem;
+    font-size: 0.58rem; font-weight: 600;
+    padding: 0.15rem 0.55rem; border-radius: 10px;
+  }
+  .flash-hint {
+    position: absolute; bottom: 0.8rem; right: 1rem;
+    font-size: 0.6rem; color: var(--text-muted);
+  }
+  .flash-number {
+    position: absolute; top: 1rem; right: 1rem;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.6rem; color: var(--text-muted);
+  }
+
+  .flash-question {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.1rem; line-height: 1.45; color: var(--text-primary);
+  }
+  .flash-answer {
+    font-size: 0.92rem; line-height: 1.55; color: var(--text-primary);
+    font-weight: 400;
+  }
+  .flash-answer strong { font-weight: 600; color: var(--accent); }
+
+  .flash-nav {
+    display: flex; justify-content: center; gap: 0.6rem; align-items: center;
+  }
+  .nav-btn {
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 0.78rem; font-weight: 500;
+    padding: 0.55rem 1.3rem; border-radius: 8px;
+    border: 1.5px solid var(--border); background: var(--bg-card);
+    color: var(--text-secondary); cursor: pointer; transition: all 0.2s;
+  }
+  .nav-btn:hover { border-color: var(--accent); color: var(--accent); }
+  .nav-btn.primary {
+    background: var(--accent); color: #fff; border-color: var(--accent);
+  }
+  .nav-btn.primary:hover { background: #9A7209; }
+  .nav-btn:disabled { opacity: 0.35; cursor: not-allowed; }
+
+  .shuffle-btn {
+    font-size: 0.7rem; padding: 0.4rem 0.9rem;
+    border-radius: 16px; background: var(--accent-light);
+    color: var(--accent); border: none; cursor: pointer;
+    font-weight: 500; transition: all 0.2s;
+  }
+  .shuffle-btn:hover { background: var(--accent); color: #fff; }
+
+  /* Confidence buttons */
+  .confidence {
+    display: flex; justify-content: center; gap: 0.5rem;
+    margin-top: 0.8rem;
+  }
+  .conf-btn {
+    font-size: 0.68rem; font-weight: 500;
+    padding: 0.3rem 0.8rem; border-radius: 16px;
+    border: 1.5px solid; cursor: pointer; transition: all 0.2s;
+    background: transparent;
+  }
+  .conf-btn.easy { border-color: var(--green); color: var(--green); }
+  .conf-btn.easy:hover, .conf-btn.easy.selected { background: var(--green-bg); }
+  .conf-btn.medium { border-color: var(--amber); color: var(--amber); }
+  .conf-btn.medium:hover, .conf-btn.medium.selected { background: var(--amber-bg); }
+  .conf-btn.hard { border-color: var(--red); color: var(--red); }
+  .conf-btn.hard:hover, .conf-btn.hard.selected { background: var(--red-bg); }
+
+  /* ============ LIST VIEW ============ */
+  .list-container {
+    max-width: 750px; margin: 0 auto; padding: 0 1.5rem 3rem;
+  }
+  .list-card {
+    background: var(--bg-card); border: 1px solid var(--border-light);
+    border-radius: 8px; margin-bottom: 0.6rem;
+    border-left: 3.5px solid transparent;
+    overflow: hidden; transition: box-shadow 0.2s;
+  }
+  .list-card:hover { box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+  .list-header {
+    padding: 0.7rem 0.9rem; cursor: pointer;
+    display: flex; justify-content: space-between; align-items: flex-start;
+  }
+  .list-q {
+    font-weight: 600; font-size: 0.8rem; flex: 1; padding-right: 0.5rem;
+  }
+  .list-badges { display: flex; align-items: center; gap: 0.4rem; flex-shrink: 0; }
+  .list-cat-badge {
+    font-size: 0.56rem; font-weight: 600;
+    padding: 0.12rem 0.45rem; border-radius: 8px;
+  }
+  .list-arrow {
+    font-size: 0.7rem; color: var(--text-muted);
+    transition: transform 0.3s;
+  }
+  .list-card.open .list-arrow { transform: rotate(180deg); }
+  .list-body {
+    max-height: 0; overflow: hidden; transition: max-height 0.35s ease;
+  }
+  .list-card.open .list-body { max-height: 300px; }
+  .list-answer {
+    padding: 0 0.9rem 0.8rem;
+    border-top: 1px solid var(--border-light);
+    padding-top: 0.6rem;
+    font-size: 0.78rem; color: var(--text-secondary); line-height: 1.6;
+  }
+
+  /* Category colors for badges */
+  .cat-epatobiliare { background: var(--amber-bg); color: var(--amber); }
+  .cat-gastro { background: var(--green-bg); color: var(--green); }
+  .cat-cardio { background: var(--blue-bg); color: var(--blue); }
+  .cat-onco { background: var(--red-bg); color: var(--red); }
+  .cat-endo { background: var(--purple-bg); color: var(--purple); }
+  .cat-lab { background: var(--teal-bg); color: var(--teal); }
+  .cat-generale { background: #ECEFF1; color: #37474F; }
+
+  .list-card[data-lcat="epatobiliare"] { border-left-color: var(--amber); }
+  .list-card[data-lcat="gastro"] { border-left-color: var(--green); }
+  .list-card[data-lcat="cardio"] { border-left-color: var(--blue); }
+  .list-card[data-lcat="onco"] { border-left-color: var(--red); }
+  .list-card[data-lcat="endo"] { border-left-color: var(--purple); }
+  .list-card[data-lcat="lab"] { border-left-color: var(--teal); }
+  .list-card[data-lcat="generale"] { border-left-color: #37474F; }
+
+  .hidden { display: none; }
+
+  /* Footer */
+  .footer {
+    text-align: center; padding: 2rem; font-size: 0.62rem;
+    color: var(--text-muted); border-top: 1px solid var(--border-light);
+  }
+
+  @media (max-width: 600px) {
+    .header h1 { font-size: 1.4rem; }
+    .flash-question { font-size: 0.95rem; }
+    .flash-answer { font-size: 0.85rem; }
+    .flash-face { padding: 1.5rem 1.2rem; }
+    .controls { gap: 0.3rem; }
+  }
+</style>
+</head>
+<body>
+
+<header class="header">
+  <div class="header-label">Modulo educativo</div>
+  <h1>Flashcard Cliniche</h1>
+  <div class="sub">54 domande per comprendere il profilo clinico — Revisione editoriale marzo 2026</div>
+  <a href="portale-clinico-integrato.html" class="back-link">← Torna al portale</a>
+</header>
+
+<div class="controls" id="catFilters"></div>
+
+<div class="stats" id="statsBar">
+  <div class="stat"><div class="stat-num" id="totalCount">0</div><div class="stat-label">Totali</div></div>
+  <div class="stat"><div class="stat-num" id="easyCount">0</div><div class="stat-label">Facili</div></div>
+  <div class="stat"><div class="stat-num" id="hardCount">0</div><div class="stat-label">Da ripassare</div></div>
+</div>
+
+<div class="mode-bar">
+  <button class="mode-btn active" data-mode="flash">◉ Flashcard</button>
+  <button class="mode-btn" data-mode="list">≡ Lista</button>
+</div>
+
+<!-- Flashcard mode -->
+<div id="flashView" class="flash-container">
+  <div class="flash-progress">
+    <span id="flashCounter">1 / 54</span>
+    <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+    <button class="shuffle-btn" onclick="shuffleDeck()">🔀 Mescola</button>
+  </div>
+  <div class="flash-card-wrapper">
+    <div class="flash-card" id="flashCard" onclick="flipCard()">
+      <div class="flash-face flash-front">
+        <span class="flash-cat-badge" id="flashCatBadge"></span>
+        <span class="flash-number" id="flashNum"></span>
+        <div class="flash-question" id="flashQ"></div>
+        <span class="flash-hint">Clicca per la risposta</span>
+      </div>
+      <div class="flash-face flash-back">
+        <span class="flash-cat-badge" id="flashCatBadge2"></span>
+        <div class="flash-answer" id="flashA"></div>
+      </div>
+    </div>
+  </div>
+  <div class="confidence" id="confBtns">
+    <button class="conf-btn easy" onclick="markConfidence('easy')">✓ Sapevo</button>
+    <button class="conf-btn medium" onclick="markConfidence('medium')">~ Quasi</button>
+    <button class="conf-btn hard" onclick="markConfidence('hard')">✗ Da ripassare</button>
+  </div>
+  <div class="flash-nav">
+    <button class="nav-btn" id="prevBtn" onclick="prevCard()">← Prec.</button>
+    <button class="nav-btn primary" id="nextBtn" onclick="nextCard()">Succ. →</button>
+  </div>
+</div>
+
+<!-- List mode -->
+<div id="listView" class="list-container hidden"></div>
+
+<footer class="footer">
+  Flashcard cliniche — Dati anonimizzati — Marzo 2026<br>
+  Contenuto generato con NotebookLM, revisionato editorialmente
+</footer>
+
+<script>
+// === FLASHCARD DATA (editorially reviewed) ===
+const allCards = [
+  // EPATOBILIARE
+  { cat:"epatobiliare", q:"Quale procedura endoscopica è programmata per rimuovere il micro-calcolo nel coledoco distale?", a:"<strong>ERCP con sfinterotomia</strong>. L'ERCP (Colangiopancreatografia Retrograda Endoscopica) permette di raggiungere e rimuovere il calcolo attraverso un endoscopio, combinata con il taglio dello sfintere di Oddi per facilitarne l'estrazione." },
+  { cat:"epatobiliare", q:"Qual è il rischio stimato di pancreatite post-ERCP indicato nella relazione?", a:"Tra il <strong>5% e l'11%</strong>. Un rischio reale ma gestibile, considerato che il rischio di complicanze senza rimozione (colangite, pancreatite acuta da calcolo) è più grave e più difficile da trattare." },
+  { cat:"epatobiliare", q:"Perché è raccomandata la rimozione del calcolo nonostante la paziente sia asintomatica?", a:"Per <strong>prevenire complicazioni gravi</strong> come colangite (infezione delle vie biliari) o pancreatite acuta. Il rapporto rischio/beneficio è nettamente a favore dell'intervento: la pancreatite post-ERCP è generalmente gestibile, la colangite molto meno." },
+  { cat:"epatobiliare", q:"Quale intervento chirurgico è pianificato dopo l'ERCP?", a:"<strong>Colecistectomia laparoscopica</strong> (rimozione della colecisti in laparoscopia), per la presenza di colelitiasi e adenomiomatosi del fondo." },
+  { cat:"epatobiliare", q:"Cosa si intende per 'adenomiomatosi del fondo' riscontrata nella colecisti?", a:"Un'<strong>iperplasia benigna</strong> della parete della colecisti localizzata al fondo: un ispessimento non tumorale dovuto a proliferazione sia del tessuto ghiandolare sia di quello muscolare." },
+  { cat:"epatobiliare", q:"Quale variante anatomica riguarda il dotto cistico della paziente?", a:"<strong>Inserzione 'a cravatta'</strong>: il dotto cistico si avvolge intorno al coledoco prima di inserirsi, anziché inserirsi in linea retta. Informazione critica per il chirurgo." },
+  { cat:"epatobiliare", q:"Perché è importante segnalare le varianti anatomiche biliari al chirurgo?", a:"Perché la confluenza anomala del dotto epatico destro e l'inserzione a cravatta del cistico <strong>modificano i punti di riferimento anatomici</strong> durante l'intervento. Senza questa consapevolezza aumenterebbe il rischio di lesioni iatrogene delle vie biliari." },
+  { cat:"epatobiliare", q:"Quale farmaco assume la paziente a supporto della funzione biliare?", a:"<strong>Acido Ursodesossicolico</strong> (Deursil) 450 mg/die. Favorisce la fluidità della bile e ha un effetto citoprotettivo sulle cellule epatiche. Da continuare fino alla risoluzione chirurgica." },
+
+  // PANCREAS
+  { cat:"epatobiliare", q:"Qual è la diagnosi relativa alla formazione di 7 mm nel corpo del pancreas?", a:"<strong>IPMN dei dotti secondari (side-branch)</strong>, senza worrisome features. È una lesione cistica che origina dai rami laterali del sistema duttale pancreatico, produce mucina e presenta crescita papillare dell'epitelio." },
+  { cat:"epatobiliare", q:"Cosa indica l'assenza di 'worrisome features' nella lesione pancreatica?", a:"L'assenza di <strong>caratteristiche radiologiche preoccupanti</strong>: nessun nodulo murale, nessuna dilatazione del dotto principale, nessuna crescita rapida. Questo rende il rischio di trasformazione maligna molto basso per le IPMN side-branch piccole." },
+  { cat:"epatobiliare", q:"Qual è la frequenza di sorveglianza raccomandata per l'IPMN stabile?", a:"<strong>RM/MRCP ogni 18 mesi</strong> (prossima prevista a giugno 2027). Se continua stabile, gli intervalli di sorveglianza si allungano progressivamente." },
+
+  // FEGATO
+  { cat:"epatobiliare", q:"Cosa indica il valore di 5,5 kPa ottenuto con l'elastografia epatica?", a:"Indica l'<strong>assenza di fibrosi epatica significativa</strong> (stadio F0–F1). La scala va da < 7 kPa (no fibrosi) fino a > 12,5 kPa (cirrosi). Il fegato è nella categoria migliore possibile." },
+  { cat:"epatobiliare", q:"Qual è la diagnosi relativa alla disomogeneità epatica vista all'ecografia ma non alla RM?", a:"<strong>Alterazione ecostrutturale senza fibrosi o steatosi significativa</strong>. L'ecografia mostra un pattern disomogeneo (stabile dal 2022), ma RM ed elastografia escludono sia fibrosi sia steatosi rilevante." },
+  { cat:"epatobiliare", q:"Cosa valuta il test MRI-PDFF citato nel piano del fegato?", a:"La <strong>Proton Density Fat Fraction</strong>: una quantificazione precisa del contenuto di grasso nel parenchima epatico tramite risonanza magnetica. Attualmente non indicato in questa paziente dato che la RM ha già escluso steatosi." },
+
+  // CROHN
+  { cat:"gastro", q:"Qual è lo stato attuale della malattia di Crohn?", a:"In <strong>remissione clinica e biochimica dal 2022</strong>. L'entero-RM e la colonscopia del novembre 2022 non hanno mostrato segni di attività di malattia." },
+  { cat:"gastro", q:"In quale anno è stata diagnosticata la malattia di Crohn?", a:"Nel <strong>2019</strong>, dopo un periodo di diarrea cronica iniziato nel 2018–2019. La colonscopia di luglio 2019 ha evidenziato lesioni ileali e rettosigmoidee." },
+  { cat:"gastro", q:"Qual è il prossimo controllo endoscopico previsto per la sorveglianza del Crohn?", a:"<strong>Colonscopia entro novembre 2026</strong> (4 anni dall'ultima del 11/2022). Anticipabile se compaiono sintomi o se i biomarcatori peggiorano. Decisione condivisa con il centro MICI." },
+  { cat:"gastro", q:"Qual è il valore di calprotectina fecale più recente (18/02/2025)?", a:"<strong>202 µg/g</strong> (o mg/kg). Un valore al limite superiore della 'zona grigia' (50–200 ambiguo, > 200 suggestivo di infiammazione). Non indica necessariamente una riacutizzazione, ma richiede monitoraggio ravvicinato." },
+  { cat:"gastro", q:"Qual è l'obiettivo del monitoraggio della calprotectina fecale?", a:"<strong>Valutare precocemente</strong> un'eventuale ripresa dell'infiammazione intestinale nel contesto del Crohn in remissione, prima che compaiano sintomi clinici evidenti. È un marcatore molto più sensibile dei soli sintomi." },
+
+  // CARDIOVASCOLARE
+  { cat:"cardio", q:"Qual è l'esito dell'ecocardiogramma riguardo alla valvola mitrale?", a:"<strong>Prolasso del lembo posteriore</strong> della valvola mitrale con insufficienza mitralica lieve. La funzione cardiaca complessiva è buona: frazione di eiezione 65%, dimensioni delle camere nella norma." },
+  { cat:"cardio", q:"Cosa è emerso dall'ECG da sforzo eseguito a gennaio 2026?", a:"<strong>Battiti ectopici ventricolari singoli</strong> con morfologia da blocco di branca destra e deviazione assiale superiore, presenti per tutta la durata del test. La risposta pressoria ha mostrato un picco borderline ipertensivo." },
+  { cat:"cardio", q:"Qual è la risposta pressoria durante il test da sforzo?", a:"<strong>Borderline ipertensiva</strong>: picco di 195/76 mmHg sotto sforzo. Un valore al limite superiore della norma che va contestualizzato con il monitoraggio pressorio a riposo (135/80 mmHg)." },
+  { cat:"cardio", q:"Quale anomalia carotidea è stata segnalata nell'ecodoppler del 2019?", a:"<strong>Ispessimento intimale bilaterale</strong> lungo entrambi gli assi carotidei. Un segno precoce di aterosclerosi, da inquadrare nella forte familiarità (aterosclerosi multi-distrettuale in entrambi i genitori e nella sorella)." },
+  { cat:"cardio", q:"Quale farmaco assume la paziente per la dislipidemia?", a:"<strong>Rosuvastatina 10 mg/die</strong>, in corso dal 2024. Ben tollerata. La strategia prevede rivalutazione dopo il profilo lipidico completo: se necessario, aumento della dose o aggiunta di ezetimibe." },
+  { cat:"cardio", q:"Qual è il target ottimale di colesterolo LDL per il profilo di rischio della paziente?", a:"<strong>< 70 mg/dL</strong> con riduzione ≥ 50% dal valore basale (che era 187 mg/dL nel 2021). Target indicato per il profilo di rischio alto (ipercolesterolemia familiare senza eventi cardiovascolari conclamati)." },
+  { cat:"cardio", q:"Ogni quanto è raccomandato il controllo con Holter ECG 24 ore?", a:"Ogni <strong>12–24 mesi</strong>. L'ultimo (gennaio 2026) ha mostrato un carico ectopico basso (210 PVC in 24h, < 1% dei battiti totali) senza aritmie sostenute." },
+  { cat:"cardio", q:"In presenza di quali sintomi si deve sospettare una complicazione cardiaca durante l'esercizio?", a:"<strong>Dolore toracico, dispnea eccessiva, sincope</strong> (svenimento) <strong>o palpitazioni persistenti</strong>. In questi casi interrompere l'attività e consultare il medico." },
+  { cat:"cardio", q:"Qual è il limite per considerare la sospensione della statina in caso di transaminasi elevate?", a:"Se i valori superano <strong>3 volte il limite superiore normale</strong> (> 3× ULN) in modo persistente, o in caso di sintomi muscolari significativi. Attualmente le transaminasi sono solo lievemente sopra i limiti e non giustificano alcuna sospensione." },
+
+  // ONCOLOGIA / NET
+  { cat:"onco", q:"Qual è l'esito del follow-up per il pregresso tumore neuroendocrino (NET) dell'appendice?", a:"Il problema è <strong>considerato risolto</strong>. Dopo l'appendicectomia R0 (margini liberi) nel 2020, tre PET con Ga-DOTATOC (2020, 2021, 2025) sono risultate negative. Non è più necessario un follow-up oncologico strutturato." },
+  { cat:"onco", q:"Cosa significa 'NET G1'?", a:"<strong>Tumore neuroendocrino di grado 1</strong>: la forma più ben differenziata e a più basso potenziale proliferativo. Nel caso specifico, misurava solo 3 mm ed è stato rimosso completamente (R0)." },
+  { cat:"onco", q:"Quali sono i sintomi della 'sindrome carcinoide' da riconoscere come allarme?", a:"<strong>Flushing</strong> (arrossamento improvviso del volto), <strong>forti dolori addominali</strong> e <strong>alterazione persistente dell'alvo</strong> (diarrea) non giustificata da altra causa nota. Evento estremamente improbabile nel caso di un NET G1 R0." },
+  { cat:"onco", q:"Il valore di Cromogranina A > 900 del 2025 indica una recidiva del NET?", a:"<strong>No.</strong> L'oncologo ha precisato che il prelievo non è stato eseguito secondo le condizioni raccomandate (ad esempio a digiuno, senza assunzione di inibitori di pompa protonica), rendendo il valore non attendibile. Le PET, che sono l'esame dirimente, sono tutte negative." },
+
+  // ENDOCRINO / OSSO
+  { cat:"endo", q:"In quale fase si trova attualmente la tiroidite di Hashimoto?", a:"In <strong>fase eutiroidea</strong>: il TSH è 2,04 µIU/mL (perfettamente nella norma 0,2–4,0). L'eco tiroide di marzo 2025 è nella norma. L'esordio nel 2007 con fase ipertiroidea TRAb-mediata si è risolto completamente." },
+  { cat:"endo", q:"Quale parametro deve essere monitorato annualmente per la tiroidite?", a:"Il <strong>TSH</strong> come parametro principale. FT3 e FT4 vanno aggiunti solo se compaiono sintomi di ipo- o ipertiroidismo." },
+  { cat:"endo", q:"Quale farmaco è prescritto per l'osteopenia/osteoporosi?", a:"<strong>Acido Alendronico</strong> (Binosto) 70 mg una volta a settimana, in corso da gennaio 2024. La terapia sarà rivalutata dopo la densitometria DEXA programmata per febbraio 2026." },
+  { cat:"endo", q:"Quale test diagnostico è programmato per febbraio 2026 per la salute dell'osso?", a:"<strong>Densitometria DEXA</strong>: per ridefinire la diagnosi (osteopenia vs osteoporosi) dopo quasi 5 anni dall'ultima (aprile 2021) e valutare l'efficacia di 2 anni di trattamento con alendronato. Saranno richiesti anche Calcio, Fosforo, vitamina D e Paratormone." },
+
+  // LABORATORIO / EMATOLOGIA
+  { cat:"lab", q:"Quale anomalia ematologica emerge dal valore di ferritina di 14 ng/mL?", a:"<strong>Deficit marziale</strong> (carenza di ferro) senza anemia. La ferritina è ai limiti inferiori (range 10–90) ma l'emoglobina è 14,1 g/dL (normale). Va completato l'assetto marziale (transferrina, saturazione) e ricercata la causa." },
+  { cat:"lab", q:"La paziente risulta anemica in base agli esami di ottobre 2025?", a:"<strong>No.</strong> L'emoglobina è 14,1 g/dL, un valore normale (range 12–16). La carenza di ferro è al momento 'latente': depositi bassi senza ancora impatto sulla produzione di emoglobina." },
+  { cat:"lab", q:"Quale condizione genetica spiega l'innalzamento della bilirubina indiretta (1,19 mg/dL)?", a:"La <strong>Sindrome di Gilbert</strong>: condizione ereditaria benigna molto comune (5–10% della popolazione) in cui il fegato smaltisce la bilirubina un po' più lentamente. Anche il figlio è affetto, confermando la natura familiare. Non è una malattia e non richiede trattamento." },
+  { cat:"lab", q:"Qual è lo stato immunologico della paziente rispetto all'epatite B (HBV)?", a:"<strong>Non protetta.</strong> HBsAg negativo, anti-HBc negativo, anti-HBs 5 mUI/mL (soglia protettiva ≥ 10). Nessuna evidenza di infezione pregressa né di immunità vaccinale efficace." },
+  { cat:"lab", q:"Qual è l'indicazione per il profilo sierologico HBV riscontrato?", a:"Esecuzione di un <strong>ciclo vaccinale completo anti-HBV</strong> con schema standard 0-1-6 mesi, seguito da controllo del titolo anti-HBs 1–2 mesi dopo l'ultima dose (target ≥ 10 mUI/mL)." },
+  { cat:"lab", q:"In caso di mancata risposta al ciclo vaccinale HBV, cosa si deve considerare?", a:"<strong>Strategie alternative</strong>: dosi aggiuntive (booster) o vaccini ad alta antigenicità. Particolarmente importante nel caso in cui fosse necessaria una futura immunosoppressione (ad esempio per una riacutizzazione del Crohn)." },
+  { cat:"lab", q:"Perché è stata richiesta la ricerca degli anticorpi APCA e anti-fattore intrinseco?", a:"Per la <strong>familiarità positiva per gastrite autoimmune</strong> (sorella affetta). La gastrite autoimmune può causare malassorbimento di ferro e vitamina B12, quindi è un'indagine che contribuisce anche a spiegare la carenza marziale." },
+  { cat:"lab", q:"L'esame urine di aprile 2025 ha evidenziato anomalie significative?", a:"<strong>No.</strong> I tracciati urinari sono stati refertati come non patologici. La presenza di rare emazie e leucociti è un riscontro comune e non clinicamente significativo in questo contesto. Nitriti assenti (nessun segno di infezione)." },
+  { cat:"lab", q:"La paziente soffre di insufficienza renale in base alla creatinina di 0,81 mg/dL?", a:"<strong>No.</strong> La creatinina è perfettamente nel range di normalità (0,60–1,20 mg/dL). Anche l'albuminuria (2,5 mg/L, range 0–20) è nella norma, indicando una buona funzione renale." },
+
+  // VITAMINA D e B12
+  { cat:"lab", q:"Quale integrazione ha portato i livelli di 25-OH Vitamina D a 64,6 ng/mL?", a:"<strong>Integrazione con Vitamina D</strong> (tipo e dose non specificati nella relazione). Il valore attuale è al di sopra del range di riferimento (11–54 ng/mL): si potrebbe valutare una riduzione del dosaggio." },
+  { cat:"lab", q:"A cosa serve il Dobetin 5000 UI e qual è la vitamina integrata?", a:"Il Dobetin integra la <strong>Vitamina B12</strong> (non la vitamina D — sono due cose distinte). Somministrato per via intramuscolare, 1 fiala/settimana per 4 settimane. Livelli attuali di B12 adeguati (259 pg/mL)." },
+
+  // GENERALE / STILE DI VITA
+  { cat:"generale", q:"Qual è il valore attuale del BMI e in quale categoria rientra?", a:"BMI <strong>23,9 kg/m²</strong>, che corrisponde alla fascia di normopeso (18,5–24,9). Peso 62 kg, altezza 161 cm." },
+  { cat:"generale", q:"La paziente ha mai fumato o assume alcol?", a:"<strong>No</strong> a entrambe le domande. Non ha mai fumato e non assume alcol. Pratica attività fisica intensa (canottaggio) e mantiene uno stile di vita molto attivo anche nella professione (fisioterapista volontaria, nonostante sia in pensione)." },
+  { cat:"generale", q:"Quale tipo di attività fisica pratica regolarmente la paziente?", a:"<strong>Canottaggio</strong> a livello agonistico (certificazione necessaria), con uno stile di vita complessivamente molto attivo. L'attività aerobica ≥ 150 minuti/settimana è raccomandata nel suo piano di gestione." },
+  { cat:"generale", q:"Qual è la raccomandazione dietetica per la gestione del fegato e della dislipidemia?", a:"<strong>Dieta mediterranea ipocalorica</strong> con esclusione dell'alcol. Mantenimento dell'attività aerobica regolare (≥ 150 minuti/settimana)." },
+  { cat:"generale", q:"La frequenza della densitometria ossea è già definita nel piano?", a:"Non ancora con precisione. La <strong>DEXA di febbraio 2026</strong> servirà a ridefinire la diagnosi e conseguentemente la strategia terapeutica e la frequenza dei controlli successivi." },
+
+  // RENALE
+  { cat:"lab", q:"Quale reperto renale è stato segnalato come 'di natura dubbia' nell'ecografia di settembre 2025?", a:"Una <strong>possibile microlitiasi renale sinistra di 4,8 mm</strong> in sede caliceale. La natura è incerta: potrebbe essere un piccolo calcolo oppure un altro tipo di formazione. Programmato controllo ecografico a maggio-giugno 2026." },
+];
+
+// === Categories ===
+const catMap = {
+  epatobiliare: { label: 'Epatobiliare / Pancreas', cls: 'cat-epatobiliare' },
+  gastro: { label: 'Gastro / Crohn', cls: 'cat-gastro' },
+  cardio: { label: 'Cardiovascolare', cls: 'cat-cardio' },
+  onco: { label: 'Oncologia / NET', cls: 'cat-onco' },
+  endo: { label: 'Endocrino / Osso', cls: 'cat-endo' },
+  lab: { label: 'Lab / Ematologia', cls: 'cat-lab' },
+  generale: { label: 'Generale', cls: 'cat-generale' },
+};
+
+// === State ===
+let activeCat = 'all';
+let deck = [...allCards];
+let currentIdx = 0;
+let confidence = {}; // idx -> easy/medium/hard
+
+// === Init ===
+function init() {
+  buildFilters();
+  buildList();
+  updateDeck();
+  showCard();
+  updateStats();
+}
+
+function buildFilters() {
+  const el = document.getElementById('catFilters');
+  let html = '<button class="cat-btn active" data-fcat="all">Tutte</button>';
+  for (const [key, val] of Object.entries(catMap)) {
+    const count = allCards.filter(c => c.cat === key).length;
+    html += `<button class="cat-btn" data-fcat="${key}">${val.label} (${count})</button>`;
+  }
+  el.innerHTML = html;
+  el.querySelectorAll('.cat-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      el.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      activeCat = btn.dataset.fcat;
+      updateDeck();
+      showCard();
+      updateStats();
+      filterList();
+    });
+  });
+}
+
+function updateDeck() {
+  deck = activeCat === 'all' ? [...allCards] : allCards.filter(c => c.cat === activeCat);
+  currentIdx = 0;
+}
+
+// === Flashcard mode ===
+function showCard() {
+  if (deck.length === 0) return;
+  const card = deck[currentIdx];
+  const cm = catMap[card.cat];
+  document.getElementById('flashQ').innerHTML = card.q;
+  document.getElementById('flashA').innerHTML = card.a;
+  document.getElementById('flashNum').textContent = `${currentIdx + 1}/${deck.length}`;
+  document.getElementById('flashCounter').textContent = `${currentIdx + 1} / ${deck.length}`;
+  document.getElementById('progressFill').style.width = `${((currentIdx + 1) / deck.length) * 100}%`;
+
+  const badge1 = document.getElementById('flashCatBadge');
+  const badge2 = document.getElementById('flashCatBadge2');
+  badge1.textContent = cm.label;
+  badge1.className = 'flash-cat-badge ' + cm.cls;
+  badge2.textContent = cm.label;
+  badge2.className = 'flash-cat-badge ' + cm.cls;
+
+  // Reset flip
+  document.getElementById('flashCard').classList.remove('flipped');
+
+  // Update nav
+  document.getElementById('prevBtn').disabled = currentIdx === 0;
+
+  // Reset confidence buttons
+  document.querySelectorAll('.conf-btn').forEach(b => b.classList.remove('selected'));
+  const globalIdx = allCards.indexOf(card);
+  if (confidence[globalIdx]) {
+    document.querySelector(`.conf-btn.${confidence[globalIdx]}`)?.classList.add('selected');
+  }
+}
+
+function flipCard() {
+  document.getElementById('flashCard').classList.toggle('flipped');
+}
+
+function nextCard() {
+  if (currentIdx < deck.length - 1) { currentIdx++; showCard(); }
+}
+function prevCard() {
+  if (currentIdx > 0) { currentIdx--; showCard(); }
+}
+
+function shuffleDeck() {
+  for (let i = deck.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [deck[i], deck[j]] = [deck[j], deck[i]];
+  }
+  currentIdx = 0;
+  showCard();
+}
+
+function markConfidence(level) {
+  const globalIdx = allCards.indexOf(deck[currentIdx]);
+  confidence[globalIdx] = level;
+  document.querySelectorAll('.conf-btn').forEach(b => b.classList.remove('selected'));
+  document.querySelector(`.conf-btn.${level}`).classList.add('selected');
+  updateStats();
+  // Auto-advance after brief delay
+  setTimeout(() => { if (currentIdx < deck.length - 1) { currentIdx++; showCard(); } }, 400);
+}
+
+function updateStats() {
+  const filtered = activeCat === 'all' ? allCards : allCards.filter(c => c.cat === activeCat);
+  document.getElementById('totalCount').textContent = filtered.length;
+  let easy = 0, hard = 0;
+  filtered.forEach(c => {
+    const gi = allCards.indexOf(c);
+    if (confidence[gi] === 'easy') easy++;
+    if (confidence[gi] === 'hard') hard++;
+  });
+  document.getElementById('easyCount').textContent = easy;
+  document.getElementById('hardCount').textContent = hard;
+}
+
+// === List mode ===
+function buildList() {
+  const el = document.getElementById('listView');
+  let html = '';
+  allCards.forEach((card, i) => {
+    const cm = catMap[card.cat];
+    html += `
+      <div class="list-card" data-lcat="${card.cat}" onclick="this.classList.toggle('open')">
+        <div class="list-header">
+          <div class="list-q">${card.q}</div>
+          <div class="list-badges">
+            <span class="list-cat-badge ${cm.cls}">${cm.label}</span>
+            <span class="list-arrow">▾</span>
+          </div>
+        </div>
+        <div class="list-body">
+          <div class="list-answer">${card.a}</div>
+        </div>
+      </div>`;
+  });
+  el.innerHTML = html;
+}
+
+function filterList() {
+  document.querySelectorAll('.list-card').forEach(card => {
+    if (activeCat === 'all' || card.dataset.lcat === activeCat) {
+      card.style.display = '';
+    } else {
+      card.style.display = 'none';
+    }
+  });
+}
+
+// === Mode toggle ===
+document.querySelectorAll('.mode-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    const mode = btn.dataset.mode;
+    document.getElementById('flashView').classList.toggle('hidden', mode !== 'flash');
+    document.getElementById('listView').classList.toggle('hidden', mode !== 'list');
+  });
+});
+
+// Keyboard shortcuts
+document.addEventListener('keydown', e => {
+  if (e.key === ' ' || e.key === 'Enter') { e.preventDefault(); flipCard(); }
+  if (e.key === 'ArrowRight') nextCard();
+  if (e.key === 'ArrowLeft') prevCard();
+  if (e.key === '1') markConfidence('easy');
+  if (e.key === '2') markConfidence('medium');
+  if (e.key === '3') markConfidence('hard');
+});
+
+init();
+</script>
+</body>
+</html>

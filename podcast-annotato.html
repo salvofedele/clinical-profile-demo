@@ -1,0 +1,779 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Podcast Annotato — Il paradosso clinico di una canottiera sessantottenne</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap');
+
+  :root {
+    --bg: #F7F5F0;
+    --bg-card: #FFFFFF;
+    --text-primary: #1A1A1A;
+    --text-secondary: #5A5A5A;
+    --text-muted: #8A8A8A;
+    --border: #E0DCD4;
+    --border-light: #EDE9E2;
+    --accent: #B8860B;
+    --accent-light: #F5ECD7;
+    --err-bg: #FFF0F0;
+    --err-border: #E8B4B4;
+    --err-text: #9B2C2C;
+    --note-bg: #FFF8E1;
+    --note-border: #F0E0A0;
+    --note-text: #7A6520;
+    --ok-bg: #E8F5E9;
+    --ok-border: #A5D6A7;
+    --ok-text: #2D7D46;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'IBM Plex Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text-primary);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* Header */
+  .header {
+    background: linear-gradient(180deg, #FFFFFF 0%, var(--bg) 100%);
+    border-bottom: 1px solid var(--border);
+    padding: 2rem 2rem 1.5rem;
+    text-align: center;
+  }
+  .header-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.65rem; letter-spacing: 0.2em; text-transform: uppercase;
+    color: var(--accent);
+  }
+  .header h1 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.65rem; font-weight: 400; margin: 0.3rem 0 0.15rem;
+    max-width: 600px; margin-left: auto; margin-right: auto;
+  }
+  .header .sub {
+    font-size: 0.82rem; color: var(--text-secondary); font-weight: 300;
+  }
+  .back-link {
+    display: inline-block; margin-top: 0.8rem;
+    font-size: 0.72rem; color: var(--accent);
+    text-decoration: none; border: 1px solid var(--accent);
+    padding: 0.3rem 0.8rem; border-radius: 16px; transition: all 0.2s;
+  }
+  .back-link:hover { background: var(--accent); color: #fff; }
+
+  /* Player */
+  .player-sticky {
+    position: sticky; top: 0; z-index: 200;
+    background: rgba(255,255,255,0.95);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    padding: 0.8rem 1.5rem;
+    max-width: 800px; margin: 0 auto;
+  }
+  .player-inner {
+    max-width: 700px; margin: 0 auto;
+    display: flex; align-items: center; gap: 1rem;
+  }
+  .play-btn {
+    width: 44px; height: 44px; border-radius: 50%;
+    background: var(--accent); border: none; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0; transition: background 0.2s;
+  }
+  .play-btn:hover { background: #9A7209; }
+  .play-btn svg { fill: #fff; width: 18px; height: 18px; }
+  .player-mid { flex: 1; }
+  .player-time {
+    display: flex; justify-content: space-between;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.65rem; color: var(--text-muted); margin-bottom: 0.25rem;
+  }
+  .progress-track {
+    width: 100%; height: 6px; background: var(--border-light);
+    border-radius: 3px; cursor: pointer; position: relative;
+  }
+  .progress-fill {
+    height: 100%; background: var(--accent); border-radius: 3px;
+    transition: width 0.15s linear; pointer-events: none;
+  }
+  .speed-btn {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.65rem; font-weight: 500;
+    padding: 0.25rem 0.5rem; border-radius: 12px;
+    border: 1.5px solid var(--border); background: var(--bg-card);
+    color: var(--text-secondary); cursor: pointer; transition: all 0.2s;
+    white-space: nowrap; flex-shrink: 0;
+  }
+  .speed-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+  /* Legend */
+  .legend {
+    max-width: 700px; margin: 1.2rem auto 0;
+    padding: 0.8rem 1rem; background: var(--bg-card);
+    border: 1px solid var(--border-light); border-radius: 8px;
+    display: flex; flex-wrap: wrap; gap: 1rem; justify-content: center;
+    font-size: 0.72rem;
+  }
+  .legend-item { display: flex; align-items: center; gap: 0.35rem; }
+  .legend-dot {
+    width: 12px; height: 12px; border-radius: 3px; flex-shrink: 0;
+  }
+
+  /* Transcript */
+  .transcript {
+    max-width: 700px; margin: 1.5rem auto 4rem;
+    padding: 0 1.5rem;
+  }
+
+  .t-segment {
+    position: relative;
+    padding: 0.5rem 0.7rem;
+    margin-bottom: 0.15rem;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.2s;
+    border-left: 3px solid transparent;
+  }
+  .t-segment:hover { background: rgba(0,0,0,0.02); }
+  .t-segment.active {
+    background: var(--accent-light);
+    border-left-color: var(--accent);
+  }
+  .t-segment.active .t-time { color: var(--accent); }
+
+  .t-time {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.6rem; color: var(--text-muted);
+    margin-bottom: 0.15rem;
+    display: inline-block;
+  }
+  .t-text {
+    font-size: 0.85rem; color: var(--text-primary); line-height: 1.55;
+  }
+
+  /* Error inline */
+  .t-err {
+    background: var(--err-bg);
+    text-decoration: line-through;
+    text-decoration-color: var(--err-text);
+    color: var(--err-text);
+    padding: 0.05rem 0.2rem; border-radius: 3px;
+    font-size: 0.82rem;
+  }
+  .t-fix {
+    background: var(--ok-bg);
+    color: var(--ok-text);
+    font-weight: 600;
+    padding: 0.05rem 0.3rem; border-radius: 3px;
+    font-size: 0.82rem;
+    margin-left: 0.1rem;
+  }
+
+  /* Annotation block */
+  .annotation {
+    margin: 0.3rem 0 0.5rem;
+    padding: 0.55rem 0.75rem;
+    border-radius: 6px;
+    font-size: 0.75rem; line-height: 1.5;
+    display: flex; gap: 0.5rem; align-items: flex-start;
+  }
+  .annotation.err {
+    background: var(--err-bg); border: 1px solid var(--err-border); color: var(--err-text);
+  }
+  .annotation.note {
+    background: var(--note-bg); border: 1px solid var(--note-border); color: var(--note-text);
+  }
+  .annotation.ok {
+    background: var(--ok-bg); border: 1px solid var(--ok-border); color: var(--ok-text);
+  }
+  .ann-icon { flex-shrink: 0; font-size: 0.9rem; }
+  .ann-text { flex: 1; }
+  .ann-text strong { font-weight: 600; }
+
+  /* Stats */
+  .err-summary {
+    max-width: 700px; margin: 0 auto 1rem;
+    padding: 0.6rem 1rem;
+    background: var(--bg-card); border: 1px solid var(--border-light);
+    border-radius: 8px;
+    display: flex; justify-content: center; gap: 2rem;
+    text-align: center;
+  }
+  .es-num {
+    font-family: 'DM Serif Display', serif; font-size: 1.3rem;
+  }
+  .es-label {
+    font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.1em;
+    color: var(--text-muted); font-weight: 500;
+  }
+
+  .footer {
+    text-align: center; padding: 2rem; font-size: 0.62rem;
+    color: var(--text-muted); border-top: 1px solid var(--border-light);
+  }
+
+  @media (max-width: 600px) {
+    .header h1 { font-size: 1.3rem; }
+    .player-inner { gap: 0.6rem; }
+    .legend { gap: 0.5rem; font-size: 0.65rem; }
+    .transcript { padding: 0 0.8rem; }
+  }
+</style>
+</head>
+<body>
+
+<header class="header">
+  <div class="header-label">Podcast con revisione editoriale</div>
+  <h1>Il paradosso clinico di una canottiera sessantottenne</h1>
+  <div class="sub">Audio generato da NotebookLM — Transcript annotato con correzioni cliniche</div>
+  <div style="margin-top:0.5rem;font-size:0.72rem;color:var(--text-muted)">Durata: 15:42 — Formato a due voci</div>
+  <a href="portale-clinico-integrato.html" class="back-link">← Torna al portale</a>
+</header>
+
+<!-- Player -->
+<div class="player-sticky">
+  <div class="player-inner">
+    <button class="play-btn" id="playBtn" onclick="togglePlay()">
+      <svg id="iconPlay" viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg>
+      <svg id="iconPause" viewBox="0 0 24 24" style="display:none"><rect x="5" y="3" width="4" height="18"/><rect x="15" y="3" width="4" height="18"/></svg>
+    </button>
+    <div class="player-mid">
+      <div class="player-time">
+        <span id="curTime">0:00</span>
+        <span id="totTime">15:42</span>
+      </div>
+      <div class="progress-track" id="progressTrack" onclick="seekAudio(event)">
+        <div class="progress-fill" id="progressBar"></div>
+      </div>
+    </div>
+    <button class="speed-btn" id="speedBtn" onclick="cycleSpeed()">1×</button>
+  </div>
+</div>
+
+<div class="err-summary">
+  <div><div class="es-num" style="color:var(--err-text)">12</div><div class="es-label">Errori segnalati</div></div>
+  <div><div class="es-num" style="color:var(--note-text)">3</div><div class="es-label">Note editoriali</div></div>
+  <div><div class="es-num" style="color:var(--ok-text)">2</div><div class="es-label">Precisazioni</div></div>
+</div>
+
+<div class="legend">
+  <div class="legend-item"><div class="legend-dot" style="background:var(--err-bg);border:1px solid var(--err-border)"></div>Errore di pronuncia/termine</div>
+  <div class="legend-item"><div class="legend-dot" style="background:var(--note-bg);border:1px solid var(--note-border)"></div>Imprecisione clinica</div>
+  <div class="legend-item"><div class="legend-dot" style="background:var(--ok-bg);border:1px solid var(--ok-border)"></div>Precisazione utile</div>
+</div>
+
+<!-- Transcript -->
+<div class="transcript" id="transcript">
+
+<div class="t-segment" data-start="0">
+  <div class="t-time">0:00</div>
+  <div class="t-text">Benvenuti a questa nuova esplorazione approfondita.</div>
+</div>
+
+<div class="t-segment" data-start="5">
+  <div class="t-time">0:05</div>
+  <div class="t-text">Oggi abbiamo sul tavolo un documento che, a un primo sguardo distratto, potrebbe sembrare un normale, per quanto voluminoso, fascicolo medico.</div>
+</div>
+
+<div class="t-segment" data-start="14">
+  <div class="t-time">0:14</div>
+  <div class="t-text">Diciamo pure molto voluminoso, considerando che parliamo di ben 12 pagine di referto, aggiornato al <span class="t-err">narzo</span> <span class="t-fix">marzo</span> del 2026.</div>
+</div>
+
+<div class="t-segment" data-start="21">
+  <div class="t-time">0:21</div>
+  <div class="t-text">Esatto, 12 pagine fitte. Ma la nostra missione in questa immersione nei dati non è semplicemente fare un freddo elenco di diagnosi o scartabellare numeri di laboratorio.</div>
+</div>
+
+<div class="t-segment" data-start="34">
+  <div class="t-time">0:34</div>
+  <div class="t-text">Vogliamo decodificare questo complesso ecosistema medico per capire un concetto secondo me fondamentale. Ovvero che la medicina moderna ha smesso da un pezzo di limitarsi a curare una malattia evidente e palese.</div>
+</div>
+
+<div class="t-segment" data-start="46">
+  <div class="t-time">0:46</div>
+  <div class="t-text">Proprio così. Oggi la vera frontiera è gestire un delicatissimo equilibrio fatto di rischi potenziali, incognite statistiche e soprattutto anatomie assolutamente uniche.</div>
+</div>
+
+<div class="t-segment" data-start="59">
+  <div class="t-time">0:59</div>
+  <div class="t-text">E per farlo stiamo per leggere quello che potremmo definire il diario di bordo di una paziente nata nel dicembre del 1957. Quindi parliamo di una donna di 68 anni.</div>
+</div>
+
+<div class="t-segment" data-start="71">
+  <div class="t-time">1:11</div>
+  <div class="t-text">68 anni esatto, che però prende ogni singolo stereotipo sull'invecchiamento e praticamente lo ribalta in pieno. È un ex fisioterapista, ora in pensione, che mantiene una vita attivissima, fa volontariato, non fuma, non beve e la cosa che rende questo profilo biomeccanicamente affascinante è che pratica il canottaggio e lo fa a un livello di intensità notevole.</div>
+</div>
+
+<div class="t-segment" data-start="96">
+  <div class="t-time">1:36</div>
+  <div class="t-text">È un contrasto che cattura immediatamente l'attenzione di chiunque metta gli occhi su queste carte. Da un lato abbiamo uno stile di vita che rasenta la perfezione assoluta, cioè un manuale vivente di prevenzione. E dall'altro questo referto infinito.</div>
+</div>
+
+<div class="t-segment" data-start="106">
+  <div class="t-time">1:46</div>
+  <div class="t-text">Esattamente. Ci troviamo di fronte a un documento clinico denso che elenca una serie impressionante di interventi pregressi, monitoraggi costanti e varianti strutturali. Il corpo umano, dopo tutto, è una macchina straordinariamente sofisticata, in cui ogni singolo microscopico ingranaggio conta e ha una sua usura nel tempo.</div>
+</div>
+
+<div class="t-segment" data-start="125">
+  <div class="t-time">2:05</div>
+  <div class="t-text">E si vede chiaramente questo campo di battaglia silenzioso. C'è una genetica implacabile, con una storia familiare pesantissima di aterosclerosi e diabete di tipo 2, che si scontra ogni giorno con questo stile di vita impeccabile.</div>
+</div>
+
+<div class="t-segment" data-start="145">
+  <div class="t-time">2:25</div>
+  <div class="t-text">È la perfetta rappresentazione di come la salute non sia mai una fotografia statica, ma piuttosto un film in continuo e imprevedibile movimento.</div>
+</div>
+
+<div class="t-segment" data-start="149">
+  <div class="t-time">2:29</div>
+  <div class="t-text">Ok, analizziamo questo punto partendo dal primo grande capitolo di questo referto, quello che potremmo definire il labirinto biliare.</div>
+</div>
+
+<div class="t-segment" data-start="158">
+  <div class="t-time">2:38</div>
+  <div class="t-text">La paziente presenta tre condizioni che convivono simultaneamente nel suo apparato biliare in questo momento.</div>
+</div>
+
+<div class="t-segment" data-start="165">
+  <div class="t-time">2:45</div>
+  <div class="t-text">Un bel traffico in quella zona diciamo.</div>
+</div>
+
+<div class="t-segment" data-start="167">
+  <div class="t-time">2:47</div>
+  <div class="t-text">Decisamente. C'è una colelitiasi, che insomma significa che ha dei calcoli nella <span class="t-err">cistifella</span> <span class="t-fix">cistifellea</span>, poi c'è una adenomiomatosi del fondo, che è un termine medico complesso per descrivere un <span class="t-err">espissimento</span> <span class="t-fix">ispessimento</span> benigno della parete muscolare della <span class="t-err">cistifella</span> <span class="t-fix">cistifellea</span>.</div>
+</div>
+<div class="annotation err">
+  <span class="ann-icon">⚠️</span>
+  <div class="ann-text"><strong>Errore ricorrente:</strong> nell'audio viene pronunciato "cistifella" più volte. Il termine corretto è <strong>cistifellea</strong> (o colecisti). Stessa cosa per "espissimento" che dovrebbe essere <strong>ispessimento</strong>.</div>
+</div>
+
+<div class="t-segment" data-start="183">
+  <div class="t-time">3:03</div>
+  <div class="t-text">E poi c'è il vero protagonista di questa sezione. Esatto, il microcalcolo. Appena 5 mm incastrato nel tratto distale prepapillare del coledoco. Praticamente nel tubo principale che trasporta la bile verso l'intestino. È bloccato lì, invariato, come confermano le risonanze magnetiche fatte tra aprile e dicembre 2025.</div>
+</div>
+
+<div class="t-segment" data-start="205">
+  <div class="t-time">3:25</div>
+  <div class="t-text">Per chi ascolta e magari non ha familiarità con l'anatomia di questa specifica area, possiamo usare un'analogia. Immaginiamo l'apparato biliare di questa paziente come un impianto idraulico residenziale ma costruito con tubature decisamente fuori standard.</div>
+</div>
+
+<div class="t-segment" data-start="220">
+  <div class="t-time">3:40</div>
+  <div class="t-text">Fuori standard è dire poco. La risonanza ha evidenziato varianti particolarissime. Sì, c'è una confluenza posteriore del dotto epatico destro e una stranissima inserzione a cravatta del dotto cistico.</div>
+</div>
+
+<div class="t-segment" data-start="233">
+  <div class="t-time">3:53</div>
+  <div class="t-text">Sembra quasi che l'architetto di questo impianto biologico abbia voluto fare un esercizio di stile complicando la vita a chiunque debba metterci le mani.</div>
+</div>
+
+<div class="t-segment" data-start="240">
+  <div class="t-time">4:00</div>
+  <div class="t-text">Ciò che è affascinante qui è proprio come queste specifiche varianti anatomiche trasformino una procedura medica considerata standard in una vera e propria sfida di alta ingegneria chirurgica.</div>
+</div>
+
+<div class="t-segment" data-start="252">
+  <div class="t-time">4:12</div>
+  <div class="t-text">Cioè, non è un semplice intervento di routine?</div>
+</div>
+
+<div class="t-segment" data-start="255">
+  <div class="t-time">4:15</div>
+  <div class="t-text">Assolutamente no. Quell'inserzione a cravatta e la confluenza anomala richiedono un'enorme perizia tecnica. Il piano terapeutico non prevede di lasciare quel calcolo di 5 mm lì, sperando che non faccia <span class="t-err">dagni</span> <span class="t-fix">danni</span>.</div>
+</div>
+
+<div class="t-segment" data-start="268">
+  <div class="t-time">4:28</div>
+  <div class="t-text">Prevede un intervento chiamato <span class="t-err">RCP</span> <span class="t-fix">ERCP</span>. Che per capirci è un endoscopio che scende dalla bocca fino all'intestino per raggiungere i dotti biliari, giusto?</div>
+</div>
+<div class="annotation err">
+  <span class="ann-icon">⚠️</span>
+  <div class="ann-text"><strong>Errore di acronimo:</strong> nell'audio viene detto "RCP" e in altri punti "RSCP". L'acronimo corretto è <strong>ERCP</strong> (Colangiopancreatografia Retrograda Endoscopica), o in italiano CPRE.</div>
+</div>
+
+<div class="t-segment" data-start="279">
+  <div class="t-time">4:39</div>
+  <div class="t-text">Corretto, e a questo si associa una sfinterotomia. Si pratica un minuscolo taglio nel muscolo a valvola per allargare il passaggio e tirare fuori il calcolo. Poi, in un secondo momento, si rimuove tutta la <span class="t-err">cistifelea</span> <span class="t-fix">cistifellea</span> in laparoscopia.</div>
+</div>
+
+<div class="t-segment" data-start="293">
+  <div class="t-time">4:53</div>
+  <div class="t-text">Ora, l'<span class="t-err">RCP</span> <span class="t-fix">ERCP</span> è una tecnologia eccellente, ma comporta un rischio di sviluppare una pancreatite post-procedurale. Un'infiammazione del pancreas.</div>
+</div>
+
+<div class="t-segment" data-start="304">
+  <div class="t-time">5:04</div>
+  <div class="t-text">Esatto, un'infiammazione che, secondo i dati comunicati alla paziente, ha una probabilità di verificarsi tra il 5 e l'11%.</div>
+</div>
+
+<div class="t-segment" data-start="310">
+  <div class="t-time">5:10</div>
+  <div class="t-text">Che onestamente suona come una percentuale enorme per una persona che, leggendo le carte, in questo momento sta bene.</div>
+</div>
+
+<div class="t-segment" data-start="318">
+  <div class="t-time">5:18</div>
+  <div class="t-text">E allora ci si potrebbe chiedere, perché andare a stuzzicare il cane che dorme? Se non ha sintomi o coliche biliari debilitanti, perché rischiare un'infiammazione al <span class="t-err">Bancreas</span> <span class="t-fix">pancreas</span> solo per recuperare un sassolino di 5 mm?</div>
+</div>
+
+<div class="t-segment" data-start="331">
+  <div class="t-time">5:31</div>
+  <div class="t-text">È un'ottima obiezione ed è il fulcro del classico calcolo del rischio medico. Si procede perché i benefici a lungo termine superano nettamente i rischi immediati.</div>
+</div>
+
+<div class="t-segment" data-start="341">
+  <div class="t-time">5:41</div>
+  <div class="t-text">Una pancreatite da <span class="t-err">RSCP</span> <span class="t-fix">ERCP</span>, per quanto dolorosa, avviene in un ambiente ospedaliero controllato, con protocolli di gestione precisissimi. Mentre se il calcolo si muove da solo e blocca il flusso della bile causa una colangite, una grave e a volte fulminante infezione delle vie biliari.</div>
+</div>
+
+<div class="t-segment" data-start="358">
+  <div class="t-time">5:58</div>
+  <div class="t-text">Sviluppare una colangite a 68 anni e magari in viaggio, lontano da un ospedale, può avere conseguenze devastanti. La clinica sceglie un rischio minore e programmato per disinnescare un'emergenza catastrofica e imprevedibile.</div>
+</div>
+
+<div class="t-segment" data-start="370">
+  <div class="t-time">6:10</div>
+  <div class="t-text">Una vera e propria partita a scacchi con la biologia. E questa bilancia dei rischi ci porta dritti a un altro capitolo che introduce l'era degli incidentalomi.</div>
+</div>
+
+<div class="t-segment" data-start="380">
+  <div class="t-time">6:20</div>
+  <div class="t-text">Subito sotto l'analisi biliare, il referto parla di un IPMN, una neoplasia mucinosa papillare intraduttale, di ben 7 mm. Localizzata nei dotti secondari del pancreas.</div>
+</div>
+
+<div class="t-segment" data-start="395">
+  <div class="t-time">6:35</div>
+  <div class="t-text">7 mm, parliamo di una cisti poco più grande di un chicco di riso. Ed è il perfetto esempio di incidentaloma.</div>
+</div>
+
+<div class="t-segment" data-start="402">
+  <div class="t-time">6:42</div>
+  <div class="t-text">Esattamente. Un'anomalia scoperta per puro caso durante indagini fatte per altri motivi. Le macchine per la risonanza oggi sono così potenti che trovano cisti millimetriche che in passato avrebbero accompagnato la persona per tutta la vita in totale silenzio.</div>
+</div>
+
+<div class="t-segment" data-start="417">
+  <div class="t-time">6:57</div>
+  <div class="t-text">Fortunatamente, leggo che è una lesione stabile per tutto il 2025 e non presenta caratteristiche preoccupanti. Niente worrisome features, come dicono in gergo. Quindi niente corsa in sala operatoria.</div>
+</div>
+
+<div class="t-segment" data-start="431">
+  <div class="t-time">7:11</div>
+  <div class="t-text">La scoperta continua di questi incidentalomi costringe la medicina a un approccio di vigilanza attiva. Si programma una sorveglianza attiva. Per questa paziente c'è una nuova risonanza colangiopancreatografica, fissata a 18 mesi di distanza, verso giugno 2027. Si osserva, ma non si tocca nulla se non è strettamente necessario, per evitare sovrattrattamenti dannosi.</div>
+</div>
+
+<div class="t-segment" data-start="454">
+  <div class="t-time">7:34</div>
+  <div class="t-text">Ed è qui che la cosa si fa davvero interessante, perché questo delicato confine tra sorveglianza utile e ossessione clinica ci fa fare un salto indietro al 2020. La paziente subisce una normale appendicectomia, ma l'istologia rivela un colpo di scena.</div>
+</div>
+
+<div class="t-segment" data-start="471">
+  <div class="t-time">7:51</div>
+  <div class="t-text">Un tumore neuroendocrino ben differenziato, un NET G1 R0. Di dimensioni microscopiche, appena 3 mm. Invisibile a occhio nudo.</div>
+</div>
+
+<div class="t-segment" data-start="481">
+  <div class="t-time">8:01</div>
+  <div class="t-text">E da lì parte un protocollo di follow-up durato anni, con gli esami più sofisticati in circolazione, inclusa una PET Total Body con gallio 68 nel marzo 2025. Una tecnologia pazzesca. Il tracciante radioattivo si lega ai recettori delle cellule tumorali e le fa illuminare.</div>
+</div>
+
+<div class="t-segment" data-start="498">
+  <div class="t-time">8:18</div>
+  <div class="t-text">Risultato di questa PET? Completamente negativo. Nessuna traccia di malattia. Anche il marcatore <span class="t-err">CA</span> <span class="t-fix">CEA</span> nel sangue è perfetto, a 2,5.</div>
+</div>
+<div class="annotation note">
+  <span class="ann-icon">📝</span>
+  <div class="ann-text"><strong>Imprecisione clinica:</strong> nell'audio viene detto "il marcatore CA" ma il valore 2,5 si riferisce al <strong>CEA</strong> (antigene carcinoembrionario), non al "CA". Inoltre il CEA non è un marcatore specifico per i NET — è stato dosato nel contesto del pannello generale, non come follow-up oncologico del tumore neuroendocrino.</div>
+</div>
+
+<div class="t-segment" data-start="507">
+  <div class="t-time">8:27</div>
+  <div class="t-text">E a quel punto l'oncologo dice basta. Problema risolto. Ferma il follow-up oncologico.</div>
+</div>
+
+<div class="t-segment" data-start="516">
+  <div class="t-time">8:36</div>
+  <div class="t-text">Eppure a febbraio 2025 spunta fuori un esame della cromogranina A con un valore altissimo, superiore a 900. E c'è una notazione cruciale. Il prelievo è stato fatto contro le indicazioni dell'oncologo.</div>
+</div>
+
+<div class="t-segment" data-start="530">
+  <div class="t-time">8:50</div>
+  <div class="t-text">Esatto. Qualcuno ha voluto cercare questo dato a tutti i costi.</div>
+</div>
+<div class="annotation note">
+  <span class="ann-icon">📝</span>
+  <div class="ann-text"><strong>Nota editoriale:</strong> il podcast adotta un tono polemico ("qualcuno ha voluto cercare questo dato a tutti i costi") che non è presente nella relazione originale, la quale riporta in modo più neutro: <em>"prelievo fatto in contrasto con le indicazioni dell'oncologo"</em>. Il valore non è attendibile perché le condizioni pre-analitiche non erano appropriate (es. digiuno, assunzione di inibitori di pompa protonica).</div>
+</div>
+
+<div class="t-segment" data-start="535">
+  <div class="t-time">8:55</div>
+  <div class="t-text">Questo solleva una domanda importante e tocca il nervo scoperto della medicina di oggi. L'oncologo aveva valutato la biologia di un tumore di 3 mm rimosso 5 anni prima e aveva concluso che il rischio residuo era praticamente zero. Ma la ricerca ossessiva di una conferma numerica ha prodotto questo valore anomalo.</div>
+</div>
+
+<div class="t-segment" data-start="552">
+  <div class="t-time">9:12</div>
+  <div class="t-text">Un falso positivo praticamente. Chiaramente un falso positivo. La cromogranina A è famosa per questo. I livelli schizzano alle stelle per motivi banalissimi come l'assunzione di farmaci, protettori per lo stomaco, un po' di stress o una lieve infiammazione.</div>
+</div>
+<div class="annotation ok">
+  <span class="ann-icon">✅</span>
+  <div class="ann-text"><strong>Corretto e ben spiegato:</strong> la cromogranina A è effettivamente soggetta a numerosi falsi positivi. L'uso di inibitori di pompa protonica (i "protettori per lo stomaco" citati) è la causa più comune di elevazioni spurie.</div>
+</div>
+
+<div class="t-segment" data-start="566">
+  <div class="t-time">9:26</div>
+  <div class="t-text">Quindi avere un numero in più ha solo generato ansia immotivata? Ha introdotto solo rumore e confusione nel sistema, dimostrando che a volte meno dati ma meglio interpretati garantiscono più sicurezza. È una trappola psicologica insidiosissima.</div>
+</div>
+
+<div class="t-segment" data-start="581">
+  <div class="t-time">9:41</div>
+  <div class="t-text">E a proposito di infiammazioni nascoste, passiamo all'intestino. La paziente convive con il morbo di Crohn, diagnosticato nel 2019. Però dal 2022 è in remissione clinica.</div>
+</div>
+
+<div class="t-segment" data-start="594">
+  <div class="t-time">9:54</div>
+  <div class="t-text">A questo si somma una tiroidite di Hashimoto, ora perfettamente sotto controllo, con TSH 2,04. Sembra tutto calmo in superficie.</div>
+</div>
+
+<div class="t-segment" data-start="604">
+  <div class="t-time">10:04</div>
+  <div class="t-text">Ma se guardiamo i dati di laboratorio, tipo la calprotectina fecale, si nota una marea infiammatoria interessante. La calprotectina è come un campanello d'allarme dei globuli bianchi nell'intestino.</div>
+</div>
+
+<div class="t-segment" data-start="619">
+  <div class="t-time">10:19</div>
+  <div class="t-text">I valori hanno fluttuato in modo indicativo. Maggio 2023 era a 233, un po' altina. Settembre 2024 crolla a 65. Ottima remissione. Febbraio 2025 risale a 202.</div>
+</div>
+
+<div class="t-segment" data-start="631">
+  <div class="t-time">10:31</div>
+  <div class="t-text">Un andamento a yo-yo che richiede sorveglianza, ma dimostra anche la saggezza di non stravolgere subito le terapie al primo sbalzo, visto che clinicamente la paziente sta benissimo. Bisogna guardare la tendenza, non il singolo numero.</div>
+</div>
+<div class="annotation ok">
+  <span class="ann-icon">✅</span>
+  <div class="ann-text"><strong>Ben espresso:</strong> il concetto di guardare il trend della calprotectina e non il singolo valore è clinicamente corretto e importante per la paziente.</div>
+</div>
+
+<div class="t-segment" data-start="644">
+  <div class="t-time">10:44</div>
+  <div class="t-text">Lo stesso vale per il fegato. Ecografie dal 2022 al 2025 parlano di un fegato disomogeneo e c'è una lieve alterazione della bilirubina indiretta a 1,19. Uno si allarma subito.</div>
+</div>
+
+<div class="t-segment" data-start="658">
+  <div class="t-time">10:58</div>
+  <div class="t-text">E qui interviene la medicina di precisione. La bilirubina alta è solo sindrome di Gilbert, una condizione genetica benigna che ha anche il figlio.</div>
+</div>
+
+<div class="t-segment" data-start="668">
+  <div class="t-time">11:08</div>
+  <div class="t-text">Ma la vera svolta è l'elastografia epatica, il fibroscan. Che misura la rigidità del fegato, giusto?</div>
+</div>
+
+<div class="t-segment" data-start="675">
+  <div class="t-time">11:15</div>
+  <div class="t-text">Esatto. L'ecografia dava questa vaga idea di disomogeneità, ma il fibroscan ha misurato una rigidità di soli 5,5 kPa, stadio F0-F1. Significa assenza totale di fibrosi. Il fegato è morbido e sanissimo.</div>
+</div>
+
+<div class="t-segment" data-start="693">
+  <div class="t-time">11:33</div>
+  <div class="t-text">L'immagine suggerisce ma la funzione conferma. Fantastico. Allora cambiamo marcia e veniamo al motore principale di questa incredibile donna: il cuore, i lipidi e il canottaggio. Un connubio molto interessante.</div>
+</div>
+
+<div class="t-segment" data-start="709">
+  <div class="t-time">11:49</div>
+  <div class="t-text">Remare a livello agonistico richiede un cuore d'acciaio e la frazione di eiezione è perfetta al 65 per cento. Efficienza muscolare eccellente. Ma c'è il colpo di scena metabolico.</div>
+</div>
+
+<div class="t-segment" data-start="720">
+  <div class="t-time">12:00</div>
+  <div class="t-text">Nel 2021 il colesterolo LDL era a 187, altissimo. Con tanto di ispessimento intimale carotideo, inizio di placche nelle arterie del collo. E se aggiungiamo la storia familiare di aterosclerosi e diabete, il quadro si fa teso.</div>
+</div>
+<div class="annotation note">
+  <span class="ann-icon">📝</span>
+  <div class="ann-text"><strong>Precisazione:</strong> l'ispessimento intimale carotideo è del 2019, non del 2021. Inoltre "inizio di placche" è un'interpretazione: il referto originale parla di ispessimento intimale, che è un segno precoce di aterosclerosi ma non equivale necessariamente a placche formate.</div>
+</div>
+
+<div class="t-segment" data-start="735">
+  <div class="t-time">12:15</div>
+  <div class="t-text">Se colleghiamo questo al quadro generale, capiamo perché l'approccio metabolico deve essere aggressivo. Lo sport non basta se la genetica rema contro in modo così pesante.</div>
+</div>
+
+<div class="t-segment" data-start="746">
+  <div class="t-time">12:26</div>
+  <div class="t-text">Prende rosuvastatina 10 mg, ma l'obiettivo terapeutico è drastico. Abbattere l'LDL sotto i 70 e l'apolipoproteina B sotto gli 80.</div>
+</div>
+
+<div class="t-segment" data-start="756">
+  <div class="t-time">12:36</div>
+  <div class="t-text">Esatto. L'LDL è il carico di colesterolo, ma l'apo B ci dice quanti camion trasportano quel carico. Sono quei camioncini che intasano le arterie. Bisognerà probabilmente intensificare la terapia.</div>
+</div>
+
+<div class="t-segment" data-start="769">
+  <div class="t-time">12:49</div>
+  <div class="t-text">E proprio testando questo equilibrio tra genetica e sport, troviamo il test da sforzo del <span class="t-err">gennario</span> <span class="t-fix">gennaio</span> 2026.</div>
+</div>
+
+<div class="t-segment" data-start="777">
+  <div class="t-time">12:57</div>
+  <div class="t-text">La paziente pedala sul ciclo ergometro al massimo delle forze. La pressione schizza a 195 su 76. Una risposta borderline. I tubi del carburante, per tornare all'analogia, mostrano la loro rigidità.</div>
+</div>
+
+<div class="t-segment" data-start="791">
+  <div class="t-time">13:11</div>
+  <div class="t-text">E dall'elettrocardiogramma emergono dei battiti ectopici, singoli, extrasistoli con morfologia a blocco di branca destra per tutto il test. Scintille irregolari nel sistema elettrico.</div>
+</div>
+
+<div class="t-segment" data-start="804">
+  <div class="t-time">13:24</div>
+  <div class="t-text">Questa è un'osservazione cardine. Da un lato abbiamo un atleta con capacità aerobiche eccezionali, dall'altro un corpo che invecchia, un lieve prolasso della valvola mitrale che sotto sforzo massimale mostra irritabilità elettriche ed extrasistoli.</div>
+</div>
+
+<div class="t-segment" data-start="818">
+  <div class="t-time">13:38</div>
+  <div class="t-text">L'<span class="t-err">alter</span> <span class="t-fix">Holter</span> delle 24 ore è rassicurante, non ci sono ischemie, ma il paradosso c'è. L'attività estrema dialoga con le vulnerabilità strutturali e non si tratta di dirle di smettere di remare assolutamente.</div>
+</div>
+<div class="annotation err">
+  <span class="ann-icon">⚠️</span>
+  <div class="ann-text"><strong>Errore di pronuncia:</strong> nell'audio si sente "alter" invece di <strong>Holter</strong>, il dispositivo per il monitoraggio ECG continuo delle 24 ore.</div>
+</div>
+
+<div class="t-segment" data-start="831">
+  <div class="t-time">13:51</div>
+  <div class="t-text">Sarebbe un errore enorme. Si tratta di ottimizzare pressione e lipidi e insegnarle ad ascoltare i veri segnali di allarme, un fiato corto anomalo o dolori toracici reali durante lo sforzo.</div>
+</div>
+
+<div class="t-segment" data-start="842">
+  <div class="t-time">14:02</div>
+  <div class="t-text">Quindi cosa significa tutto questo per chi ascolta e cerca di gestire la propria salute? Questa paziente ci insegna che essere in salute non significa essere privi di difetti clinici.</div>
+</div>
+
+<div class="t-segment" data-start="853">
+  <div class="t-time">14:13</div>
+  <div class="t-text">Certo, se guardiamo il referto ci sono tanti altri piccoli alert. Tantissimi. Una cisti renale da 4,8 mm, ferritina bassa a 14, nessuna immunità al vaccino dell'epatite B.</div>
+</div>
+
+<div class="t-segment" data-start="866">
+  <div class="t-time">14:26</div>
+  <div class="t-text">Eppure lei vive una vita vibrante e attiva. Il segreto non è avere tutti i parametri perfetti, ma avere i rischi identificati e gestiti proattivamente. È un'ottima sintesi.</div>
+</div>
+
+<div class="t-segment" data-start="876">
+  <div class="t-time">14:36</div>
+  <div class="t-text">E vorrei chiudere con una riflessione più profonda. Pensiamo di nuovo all'episodio della cromogranina A, un esame non richiesto che crea panico per un tumore guarito da 5 anni. Questo ci sbatte in faccia il grande enigma della medicina iperpersonalizzata.</div>
+</div>
+
+<div class="t-segment" data-start="891">
+  <div class="t-time">14:51</div>
+  <div class="t-text">Un'arma a doppio taglio. Esattamente. Oggi possiamo mappare i geni, misurare cisti millimetriche, tracciare ogni singolo battito cardiaco con lo smartwatch.</div>
+</div>
+
+<div class="t-segment" data-start="902">
+  <div class="t-time">15:02</div>
+  <div class="t-text">La domanda è, arriverà un punto in cui l'eccesso di monitoraggio smetterà di essere uno <span class="t-err">scodo</span> <span class="t-fix">scudo</span> per la nostra salute e diventerà invece una gabbia logorante per la nostra mente?</div>
+</div>
+
+<div class="t-segment" data-start="912">
+  <div class="t-time">15:12</div>
+  <div class="t-text">Quanto sapere è troppo sapere. Proprio così. Quando esploriamo i meandri infinitesimali del nostro corpo, rischiamo di perdere di vista il benessere globale. Un pensiero decisamente provocatorio su cui chi ascolta potrà riflettere a lungo.</div>
+</div>
+
+<div class="t-segment" data-start="927">
+  <div class="t-time">15:27</div>
+  <div class="t-text">Tra prevenzione intelligente e ipocondria tecnologica, il confine è sempre più sottile. Speriamo che questa decodifica vi abbia offerto nuove prospettive su come interpretare l'equilibrio del corpo umano. Alla prossima esplorazione approfondita.</div>
+</div>
+
+</div><!-- end transcript -->
+
+<footer class="footer">
+  Audio: NotebookLM (Google) — Revisione editoriale: marzo 2026<br>
+  Documento anonimizzato e pubblicato con il consenso della paziente
+</footer>
+
+<!-- Audio element (hidden) -->
+<audio id="audio" preload="metadata">
+  <source src="audio-podcast.m4a" type="audio/mp4">
+</audio>
+
+<script>
+const audio = document.getElementById('audio');
+const segments = document.querySelectorAll('.t-segment');
+const speeds = [1, 1.25, 1.5, 0.75];
+let speedIdx = 0;
+
+function togglePlay() {
+  if (audio.paused) {
+    audio.play();
+    document.getElementById('iconPlay').style.display = 'none';
+    document.getElementById('iconPause').style.display = 'block';
+  } else {
+    audio.pause();
+    document.getElementById('iconPlay').style.display = 'block';
+    document.getElementById('iconPause').style.display = 'none';
+  }
+}
+
+function fmtTime(s) {
+  const m = Math.floor(s / 60);
+  const sec = Math.floor(s % 60);
+  return m + ':' + (sec < 10 ? '0' : '') + sec;
+}
+
+audio.addEventListener('loadedmetadata', () => {
+  document.getElementById('totTime').textContent = fmtTime(audio.duration);
+});
+
+audio.addEventListener('timeupdate', () => {
+  const t = audio.currentTime;
+  document.getElementById('curTime').textContent = fmtTime(t);
+  const pct = (t / audio.duration) * 100;
+  document.getElementById('progressBar').style.width = pct + '%';
+
+  // Highlight active segment
+  let activeSegment = null;
+  segments.forEach(seg => {
+    const start = parseFloat(seg.dataset.start);
+    seg.classList.remove('active');
+    if (t >= start) activeSegment = seg;
+  });
+  if (activeSegment) {
+    activeSegment.classList.add('active');
+    // Scroll into view if not visible
+    const rect = activeSegment.getBoundingClientRect();
+    if (rect.top < 100 || rect.bottom > window.innerHeight - 50) {
+      activeSegment.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+  }
+});
+
+audio.addEventListener('ended', () => {
+  document.getElementById('iconPlay').style.display = 'block';
+  document.getElementById('iconPause').style.display = 'none';
+});
+
+function seekAudio(e) {
+  const rect = e.currentTarget.getBoundingClientRect();
+  const pct = (e.clientX - rect.left) / rect.width;
+  audio.currentTime = pct * audio.duration;
+}
+
+function cycleSpeed() {
+  speedIdx = (speedIdx + 1) % speeds.length;
+  audio.playbackRate = speeds[speedIdx];
+  document.getElementById('speedBtn').textContent = speeds[speedIdx] + '×';
+}
+
+// Click on segment to seek
+segments.forEach(seg => {
+  seg.addEventListener('click', () => {
+    audio.currentTime = parseFloat(seg.dataset.start);
+    if (audio.paused) togglePlay();
+  });
+});
+</script>
+</body>
+</html>

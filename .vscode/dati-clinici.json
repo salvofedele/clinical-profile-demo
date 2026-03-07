@@ -1,0 +1,198 @@
+{
+  "meta": {
+    "paziente_id": "181257-F",
+    "data_nascita": "1957-12-18",
+    "sesso": "F",
+    "ultimo_aggiornamento": "2026-03-06",
+    "note": "Documento anonimizzato, pubblicato con consenso della paziente"
+  },
+
+  "antropometria": {
+    "data": "2025-09-24",
+    "peso_kg": 62,
+    "altezza_cm": 161,
+    "bmi": 23.9
+  },
+
+  "stile_vita": {
+    "fumo": "Mai",
+    "alcol": "No",
+    "attivita_fisica": "Canottaggio agonistico, stile di vita molto attivo",
+    "professione": "Fisioterapista (in pensione, attiva come volontaria)"
+  },
+
+  "problemi": [
+    {
+      "id": 1,
+      "nome": "Colelitiasi + adenomiomatosi + micro-calcolo pre-papillare",
+      "categoria": "epatobiliare",
+      "priorita": 1,
+      "status": "intervento",
+      "sintesi": "Micro-calcolo distale 5 mm confermato RM 04/2025 e 12/2025. Varianti biliari documentate.",
+      "piano": "ERCP con sfinterotomia → colecistectomia laparoscopica",
+      "note": "Segnalare varianti biliari al chirurgo"
+    },
+    {
+      "id": 2,
+      "nome": "IPMN side-branch 7 mm",
+      "categoria": "epatobiliare",
+      "priorita": 2,
+      "status": "stabile",
+      "sintesi": "Formazione 7 mm corpo pancreas, stabile tra RM 04/2025 e 12/2025. No worrisome features.",
+      "piano": "RM/MRCP sorveglianza a 18 mesi (giugno 2027)"
+    },
+    {
+      "id": 3,
+      "nome": "Fegato — disomogeneità ecografica",
+      "categoria": "epatobiliare",
+      "priorita": 2,
+      "status": "stabile",
+      "sintesi": "Disomogeneità eco stabile dal 2022. RM neg. Elastografia 5.5 kPa (F0-F1). Gilbert.",
+      "piano": "Controllo semestrale enzimi epatici"
+    },
+    {
+      "id": 4,
+      "nome": "Malattia di Crohn",
+      "categoria": "gastro",
+      "priorita": 2,
+      "status": "monitorare",
+      "sintesi": "Ileale ± rettosigmoidea, diagnosi 2019. Remissione dal 2022. Calprotectina: 233→65→202.",
+      "piano": "Calprotectina + PCR/VES entro 3 mesi; colonscopia entro 11/2026"
+    },
+    {
+      "id": 5,
+      "nome": "Dislipidemia / Rischio CV",
+      "categoria": "cardio",
+      "priorita": 3,
+      "status": "monitorare",
+      "sintesi": "LDL basale 187 (2021). Ispessimento intimale carotideo 2019. Rosuvastatina 10 mg dal 2024.",
+      "piano": "Profilo lipidico completo + SCORE2. Target LDL < 70."
+    },
+    {
+      "id": 6,
+      "nome": "Prolasso mitrale + extrasistoli",
+      "categoria": "cardio",
+      "priorita": 3,
+      "status": "monitorare",
+      "sintesi": "Prolasso lembo post. con insufficienza lieve. FE 65%. PVC 210/24h.",
+      "piano": "Holter ECG 12-24 mesi. Ottimizzazione PA e lipidi."
+    },
+    {
+      "id": 7,
+      "nome": "Tiroidite di Hashimoto",
+      "categoria": "endo",
+      "priorita": 3,
+      "status": "stabile",
+      "sintesi": "Eutiroidismo stabile. TSH 2.04 (10/2025). Eco norma (03/2025).",
+      "piano": "TSH annuale"
+    },
+    {
+      "id": 8,
+      "nome": "Osteopenia / Osteoporosi",
+      "categoria": "msk",
+      "priorita": 3,
+      "status": "monitorare",
+      "sintesi": "Osteopenia su menopausa chirurgica precoce (2006). Binosto 70 mg/sett dal 01/2024.",
+      "piano": "DEXA 02/2026 per ridefinizione."
+    },
+    {
+      "id": 9,
+      "nome": "Deficit marziale",
+      "categoria": "lab",
+      "priorita": 3,
+      "status": "monitorare",
+      "sintesi": "Ferritina 14 ng/mL senza anemia (Hb 14.1).",
+      "piano": "Assetto marziale completo. Se persistente → ferro orale."
+    },
+    {
+      "id": 10,
+      "nome": "HBV — non protetta",
+      "categoria": "lab",
+      "priorita": 3,
+      "status": "monitorare",
+      "sintesi": "Anti-HBs 5 mUI/mL. Nessuna immunità documentabile.",
+      "piano": "Vaccinazione HBV schema 0-1-6 mesi."
+    },
+    {
+      "id": 11,
+      "nome": "Cisti renali + microlitiasi dubbia",
+      "categoria": "lab",
+      "priorita": 3,
+      "status": "monitorare",
+      "sintesi": "Cisti bilaterali ≤1 cm. Possibile microlitiasi sx 4.8 mm.",
+      "piano": "Eco renale maggio-giugno 2026."
+    },
+    {
+      "id": 12,
+      "nome": "NET G1 appendicolare",
+      "categoria": "onco",
+      "priorita": 4,
+      "status": "risolto",
+      "sintesi": "3 mm, R0 (2020). 3 PET negative (2020, 2021, 2025).",
+      "piano": "Nessun follow-up strutturato."
+    },
+    {
+      "id": 13,
+      "nome": "Sindrome di Gilbert",
+      "categoria": "lab",
+      "priorita": 4,
+      "status": "risolto",
+      "sintesi": "Bilirubina tot 1.39, indiretta 1.19. Figlio affetto.",
+      "piano": "Nessun trattamento."
+    }
+  ],
+
+  "terapie": [
+    { "farmaco": "Rosuvastatina", "dose": "10 mg/die", "indicazione": "Dislipidemia / Rischio CV", "note": "Rivalutare dose dopo profilo lipidico" },
+    { "farmaco": "Ursodesossicolico (Deursil)", "dose": "450 mg/die", "indicazione": "Supporto biliare", "note": "Continuare fino a risoluzione chirurgica" },
+    { "farmaco": "Ac. Alendronico (Binosto)", "dose": "70 mg/sett", "indicazione": "Osteopenia", "note": "Rivalutare dopo DEXA 02/2026" },
+    { "farmaco": "Vitamina D", "dose": "Integrazione", "indicazione": "Metabolismo osseo", "note": "25-OH 64.6 ng/mL" },
+    { "farmaco": "Dobetin", "dose": "5000 UI i.m. 1f/sett x4", "indicazione": "Vitamina B12", "note": "Ciclo 2024. B12 259 pg/mL" }
+  ],
+
+  "scadenze": [
+    { "periodo": "Marzo 2026", "urgenza": "alta", "items": [
+      { "voce": "ERCP con sfinterotomia", "completata": false },
+      { "voce": "Profilo lipidico completo", "completata": false },
+      { "voce": "Metabolismo glucidico", "completata": false },
+      { "voce": "Pannello epatico + pancreatico", "completata": false },
+      { "voce": "Calprotectina fecale + PCR/VES", "completata": false },
+      { "voce": "Assetto marziale completo", "completata": false },
+      { "voce": "CEA + CA 19-9", "completata": false },
+      { "voce": "APCA + ab anti-fattore intrinseco", "completata": false },
+      { "voce": "Densitometria DEXA", "completata": false }
+    ]},
+    { "periodo": "Post-ERCP", "urgenza": "alta", "items": [
+      { "voce": "Colecistectomia laparoscopica", "completata": false }
+    ]},
+    { "periodo": "Maggio-Giugno 2026", "urgenza": "media", "items": [
+      { "voce": "Ecografia renale + urinalisi", "completata": false },
+      { "voce": "Inizio vaccinazione HBV", "completata": false }
+    ]},
+    { "periodo": "Settembre 2026", "urgenza": "routine", "items": [
+      { "voce": "Pannello metabolico/epatico annuale", "completata": false },
+      { "voce": "TSH", "completata": false },
+      { "voce": "Calprotectina + PCR/VES", "completata": false },
+      { "voce": "Holter ECG 24h", "completata": false }
+    ]},
+    { "periodo": "Novembre 2026", "urgenza": "media", "items": [
+      { "voce": "Colonscopia sorveglianza Crohn", "completata": false }
+    ]},
+    { "periodo": "Giugno 2027", "urgenza": "media", "items": [
+      { "voce": "RM/MRCP pancreas — sorveglianza IPMN", "completata": false }
+    ]}
+  ],
+
+  "biomarcatori": [
+    { "nome": "AST", "valore": 25, "unita": "U/L", "rif": "4-19", "data": "2025-10-01", "status": "warn" },
+    { "nome": "ALT", "valore": 23, "unita": "U/L", "rif": "2.5-17", "data": "2025-10-01", "status": "warn" },
+    { "nome": "GGT", "valore": 22, "unita": "U/L", "rif": "4-18", "data": "2025-10-01", "status": "warn" },
+    { "nome": "Bilirubina tot", "valore": 1.39, "unita": "mg/dL", "rif": "≤1.0", "data": "2025-10-01", "status": "warn" },
+    { "nome": "Ferritina", "valore": 14, "unita": "ng/mL", "rif": "10-90", "data": "2025-10-01", "status": "alert" },
+    { "nome": "Hb", "valore": 14.1, "unita": "g/dL", "rif": "12-16", "data": "2025-10-01", "status": "ok" },
+    { "nome": "TSH", "valore": 2.04, "unita": "µIU/mL", "rif": "0.2-4.0", "data": "2025-10-01", "status": "ok" },
+    { "nome": "CEA", "valore": 2.5, "unita": "ng/mL", "rif": "≤5.0", "data": "2025-10-01", "status": "ok" },
+    { "nome": "Calprotectina", "valore": 202, "unita": "µg/g", "rif": "<50 norma", "data": "2025-02-18", "status": "warn" },
+    { "nome": "Elastografia", "valore": 5.5, "unita": "kPa", "rif": "F0-F1", "data": "2025-09-15", "status": "ok" }
+  ]
+}
